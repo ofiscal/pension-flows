@@ -53,6 +53,17 @@ def mk_pension_employer ( independiente : int,
       ss_contribs_by_employer["pension"] )
     return compute_base( income ) * rate
 
+
+### ### ### ### ### ### ### ###
+###     pension schedules   ###
+### ### ### ### ### ### ### ###
+
+# These are single-key {"pension" : _}dictionaries,
+# which is a little silly.
+# They are like that because this code was copied,
+# only in relevant part, from the tax.co microsimulation,
+# where they have other keys too.
+
 ss_contrib_schedule_for_contractor : \
   Dict [ str,
          List [ Schedule ] ] = \
