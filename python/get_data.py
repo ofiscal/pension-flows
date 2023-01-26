@@ -3,17 +3,21 @@ from os.path import join
 import pandas as pd
 
 
-columns_of_interest_original_names : List [str] = \
+columns_of_interest_original_names : \
+  List [str] = \
     [ "fex_c_2011", "DIRECTORIO", "ORDEN",
       "INGLABO", "P6920", "P6430" ]
 
-rename_columns : Dict [ str, str ] = \
-  { "fex_c_2011" : "weight",
-    "INGLABO"    : "labor income",
-    "P6920"      : "pension contrib",
-    "P6430"      : "independiente" }
+rename_columns : \
+  Dict [ str, str ] = \
+    { "fex_c_2011" : "weight",
+      "INGLABO"    : "labor income",
+      "P6920"      : "pension contrib",
+      "P6430"      : "independiente" }
 
-def fetch_one ( filename : str, nickname : str ) -> pd.DataFrame:
+def fetch_one ( filename : str,
+                nickname : str
+               ) -> pd.DataFrame:
   df = (
     pd.read_csv (
       join ( "data/geih/2021-11/csv",
