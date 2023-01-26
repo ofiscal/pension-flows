@@ -23,7 +23,7 @@ def fetch_one ( filename : str,
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
-      join ( "data/geih/2021-11/csv",
+      join ( "data/geih/2021-11",
              filename ),
       usecols = columns_of_interest_original_names,
       sep = ";" )
