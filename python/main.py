@@ -5,11 +5,12 @@ import pandas as pd
 datapath = "data/geih/2021-11/csv/"
 
 
-### ### ### ### ### ###
-### read the data   ###
-### ### ### ### ### ###
+### ### ### ### ### ### ###
+###    Read the data    ###
+### ### ### ### ### ### ###
 
-## TODO : This is inefficient -- it reads everything, most of which is unneeded."
+# TODO : This is inefficient --
+# it reads every column, most of which are unneeded.
 
 area = pd.read_csv(
   join ( datapath, "area_Ocupados.csv" ),
@@ -24,9 +25,9 @@ resto = pd.read_csv(
   sep = ";" )
 
 
-### ### ### ### ### ###
-### subset the data ###
-### ### ### ### ### ###
+### ### ### ### ### ### ### ###
+###     Subset the data     ###
+### ### ### ### ### ### ### ###
 
 area2 = (
   area [[ "fex_c_2011", "DIRECTORIO", "ORDEN",
