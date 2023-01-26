@@ -29,3 +29,18 @@ def raw_renamed_data () -> pd.DataFrame:
     [ fetch_one ( "area_Ocupados.csv"     , "area"     ),
       fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
       fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) ] )
+
+def clean ( df : pd.DataFrame
+           ) -> pd.DataFrame:
+  df [ "DIRECTORIO" ] = (
+    df [ "DIRECTORIO" ]
+    . str . replace ( ",", "" )
+    . astype ( int ) )
+  df [ "pension contrib" ] = (
+    ( df [ "pension contrib" ] == 1 )
+    . astype ( int ) )
+  df [ "independiente" ] = (
+    df [ "independiente" ]
+    . isin ( [1,2,5] )
+    . astype ( int ) )
+  return df
