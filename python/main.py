@@ -4,6 +4,7 @@ import pandas as pd
 from python.get_data import fetch_all
 
 
-# PITFALL: Mypy can't handle type signatures here --
+# Type signature pitfall: Python (3.9, at least)
+# can't handle a type signatures here --
 # neither inside the tuple, nor of it.
 ( area, cabecera, resto ) = fetch_all ()

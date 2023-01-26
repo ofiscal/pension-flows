@@ -15,18 +15,20 @@ rename_columns : Dict [ str, str ] = \
     "P6920"      : "pension contrib",
     "P6430"      : "independiente" }
 
-def fetch_one ( filename : str ) -> pd.DataFrame:
-  return (
+def fetch_one ( filename : str, nickname : str ) -> pd.DataFrame:
+  df = (
     pd.read_csv (
       join ( datapath, filename ),
       usecols = columns_of_interest_original_names,
       sep = ";" )
-  . rename ( columns = rename_columns ) )
+    . rename ( columns = rename_columns ) )
+  df [ "source file" ] = nickname
+  return df
 
 def fetch_all () -> Tuple [ pd.DataFrame,
                             pd.DataFrame,
                             pd.DataFrame ]:
   return (
-    fetch_one ( "area_Ocupados.csv"     ),
-    fetch_one ( "Cabecera_Ocupados.csv" ),
-    fetch_one (  "Resto_Ocupados.csv"   ) )
+    fetch_one ( "area_Ocupados.csv"     , "area"     ),
+    fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
+    fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) )
