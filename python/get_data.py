@@ -25,10 +25,8 @@ def fetch_one ( filename : str, nickname : str ) -> pd.DataFrame:
   df [ "source file" ] = nickname
   return df
 
-def fetch_all () -> Tuple [ pd.DataFrame,
-                            pd.DataFrame,
-                            pd.DataFrame ]:
-  return (
-    fetch_one ( "area_Ocupados.csv"     , "area"     ),
-    fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
-    fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) )
+def raw_renamed_data () -> pd.DataFrame:
+  return pd.concat (
+    [ fetch_one ( "area_Ocupados.csv"     , "area"     ),
+      fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
+      fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) ] )
