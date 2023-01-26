@@ -1,4 +1,4 @@
-from typing import List, Dict
+from typing import List, Dict, Tuple
 from os.path import join
 import pandas as pd
 
@@ -15,23 +15,20 @@ rename_columns : Dict [ str, str ] = \
     "P6920"      : "pension contrib",
     "P6430"      : "independiente" }
 
-area = (
-  pd.read_csv (
-    join ( datapath, "area_Ocupados.csv" ),
-    usecols = columns_of_interest_original_names,
-    sep = ";" )
+def fetch_one ( filename : str ) -> pd.DataFrame:
+  return (
+    pd.read_csv (
+      join ( datapath, filename ),
+      usecols = columns_of_interest_original_names,
+      sep = ";" )
   . rename ( columns = rename_columns ) )
 
-cabecera = (
-  pd.read_csv(
-    join ( datapath, "Cabecera_Ocupados.csv" ),
-    usecols = columns_of_interest_original_names,
-    sep = ";" )
-  . rename ( columns = rename_columns ) )
+def fetch_all () -> Tuple [ pd.DataFrame,
+                            pd.DataFrame,
+                            pd.DataFrame ]:
+  return (
+    fetch_one ( "area_Ocupados.csv"     ),
+    fetch_one ( "Cabecera_Ocupados.csv" ),
+    fetch_one (  "Resto_Ocupados.csv"   ) )
 
-resto = (
-  pd.read_csv(
-    join ( datapath, "Resto_Ocupados.csv" ),
-    usecols = columns_of_interest_original_names,
-    sep = ";" )
-  . rename ( columns = rename_columns ) )
+(area, cabecera, resto) = fetch_all ()
