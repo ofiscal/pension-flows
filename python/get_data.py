@@ -5,15 +5,18 @@ import pandas as pd
 
 columns_of_interest_original_names : \
   List [str] = \
-    [ "fex_c_2011", "DIRECTORIO", "ORDEN",
+    [ "fex_c_2011", "DIRECTORIO", "SECUENCIA_P", "ORDEN",
       "INGLABO", "P6920", "P6430" ]
 
 rename_columns : \
   Dict [ str, str ] = \
-    { "fex_c_2011" : "weight",
-      "INGLABO"    : "labor income",
-      "P6920"      : "pension contrib",
-      "P6430"      : "independiente" }
+    { "fex_c_2011"  : "weight",
+      "DIRECTORIO"  : "DIR",
+      "SECUENCIA_P" : "SEC",
+      "ORDEN"       : "ORD",
+      "INGLABO"     : "labor income",
+      "P6920"       : "pension contrib",
+      "P6430"       : "independiente" }
 
 def fetch_one ( filename : str,
                 nickname : str
@@ -34,10 +37,10 @@ def raw_renamed_data () -> pd.DataFrame:
       fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
       fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) ] )
 
-def clean ( df : pd.DataFrame
-           ) -> pd.DataFrame:
-  df [ "DIRECTORIO" ] = (
-    df [ "DIRECTORIO" ]
+def interpret_columns ( df : pd.DataFrame
+                       ) -> pd.DataFrame:
+  df [ "DIR" ] = (
+    df [ "DIR" ]
     . str . replace ( ",", "" )
     . astype ( int ) )
   df [ "pension contrib" ] = (
