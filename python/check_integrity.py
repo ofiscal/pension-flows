@@ -52,7 +52,8 @@ xmax = ( ppl
 x = ( xmin [ ["DIR", "SEC", "ORD"] ]
       . copy() )
 
-for c in [ "weight", "labor income", "pension contrib", "independiente" ]:
+for c in [ "weight",
+           "labor income", "contributes to pension", "independiente" ]:
   x[c] = xmax[c] - xmin[c]
 
 print ( """HEY YOU! In the following printout, every non-ID column should have a standard deviation of zero.""" )

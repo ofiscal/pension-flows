@@ -20,7 +20,7 @@ rename_columns : \
       # are names of what the column *will be*
       # once processed by interpret_columns.
       # Before that, the names on the RHS below are a lie.
-      "P6920"       : "pension contrib",
+      "P6920"       : "contributes to pension",
       "P6430"       : "independiente" }
 
 def fetch_one ( filename : str,
@@ -48,8 +48,8 @@ def interpret_columns ( df : pd.DataFrame
     df [ "DIR" ]
     . str . replace ( ",", "" )
     . astype ( int ) )
-  df [ "pension contrib" ] = (
-    ( df [ "pension contrib" ] == 1 )
+  df [ "contributes to pension" ] = (
+    ( df [ "contributes to pension" ] == 1 )
     . astype ( int ) )
   df [ "independiente" ] = (
     df [ "independiente" ]
