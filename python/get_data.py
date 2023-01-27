@@ -15,6 +15,11 @@ rename_columns : \
       "SECUENCIA_P" : "SEC",
       "ORDEN"       : "ORD",
       "INGLABO"     : "labor income",
+
+      # PITFALL: The RHS of the next two items
+      # are names of what the column *will be*
+      # once processed by interpret_columns.
+      # Before that, the names on the RHS below are a lie.
       "P6920"       : "pension contrib",
       "P6430"       : "independiente" }
 
