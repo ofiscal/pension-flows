@@ -6,7 +6,7 @@
 
 from typing import Tuple, List, Dict, Callable
 import pandas as pd
-from common import min_wage
+from python.common import min_wage
 
 
 Schedule = Tuple [ # PITFALL: Mypy does not recognize that typing exports GenericAlias,
