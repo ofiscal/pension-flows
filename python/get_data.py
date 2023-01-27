@@ -56,3 +56,11 @@ def interpret_columns ( df : pd.DataFrame
     . isin ( [1,2,5] )
     . astype ( int ) )
   return df
+
+def deduplicate_rows ( df : pd.DataFrame
+                      ) -> pd.DataFrame:
+  # See `python.check_integrity.py` for why this is justified.
+  return ( df
+           . groupby ( ["DIR", "SEC", "ORD"] )
+           . agg ( "first" )
+           . reset_index() )
