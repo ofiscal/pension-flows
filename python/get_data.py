@@ -59,9 +59,6 @@ def fetch_one ( filename : str,
   df [ "source file" ] = nickname
   return df
 
-# TODO: Factor out the commonalities from the next two functions
-# (called raw_*_renamed).
-
 def fetch_data_and_rename_columns (
     filename_tail : str,
     original_names_of_columns_of_interest : List[str],
