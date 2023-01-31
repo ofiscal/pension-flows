@@ -7,12 +7,12 @@ columns_of_interest_original_names_universal : \
   List [str] = \
     [ "DIRECTORIO", "SECUENCIA_P", "ORDEN", "fex_c_2011" ]
 
-columns_of_interest_original_names_ocupados : \
+original_names_of_columns_of_interest_in_ocupados : \
   List [str] = (
     columns_of_interest_original_names_universal +
     [ "INGLABO", "P6920", "P6430" ] )
 
-columns_of_interest_original_names_caracteristicas_personales : \
+original_names_of_columns_of_interest_in_caracteristicas_generales : \
   List [str] = (
     columns_of_interest_original_names_universal +
     [ "P6020", "P6030S3" ] )
@@ -62,25 +62,36 @@ def fetch_one ( filename : str,
 # TODO: Factor out the commonalities from the next two functions
 # (called raw_*_renamed).
 
-def raw_ocupados_renamed () -> pd.DataFrame:
-  tail = "_Ocupados.csv"
-  cs = columns_of_interest_original_names_ocupados
-  r = { **rename_columns_universal,
-        **rename_columns_ocupados }
+def fetch_data_and_rename_columns (
+    filename_tail : str,
+    original_names_of_columns_of_interest : List[str],
+    how_to_rename_columns : Dict[str,str]
+    ) -> pd.DataFrame:
+  (tail,cs,r) = ( filename_tail,
+                  original_names_of_columns_of_interest,
+                  how_to_rename_columns )
   return pd.concat (
     [ fetch_one ( "area"     + tail, "area"    , cs, r ),
       fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
       fetch_one ( "Resto"    + tail, "resto"   , cs, r ) ] )
 
+def raw_ocupados_renamed () -> pd.DataFrame:
+  return fetch_data_and_rename_columns (
+    filename_tail = "_Ocupados.csv",
+    original_names_of_columns_of_interest = \
+      original_names_of_columns_of_interest_in_ocupados,
+    how_to_rename_columns = {
+      **rename_columns_universal,
+      **rename_columns_ocupados } )
+
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
-  tail = "_Caracteristicas-generales_Personas.csv"
-  cs = columns_of_interest_original_names_caracteristicas_personales
-  r = { **rename_columns_universal,
-        **rename_columns_caracteristicas_personales }
-  return pd.concat (
-    [ fetch_one ( "area"     + tail, "area"    , cs, r ),
-      fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
-      fetch_one ( "Resto"    + tail, "resto"   , cs, r ) ] )
+  return fetch_data_and_rename_columns (
+    filename_tail = "_Caracteristicas-generales_Personas.csv",
+    original_names_of_columns_of_interest = \
+      original_names_of_columns_of_interest_in_caracteristicas_generales,
+    how_to_rename_columns = {
+      **rename_columns_universal,
+      **rename_columns_caracteristicas_personales } )
 
 def interpret_columns_universal (
     df : pd.DataFrame
