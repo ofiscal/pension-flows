@@ -4,16 +4,16 @@
 # That's expedient but inelegant.
 # Better to separate these into an independent module that both can import.
 
-from typing import Tuple, List, Dict, Callable
+from typing import Tuple, List, Dict
 import pandas as pd
+
 from python.common import min_wage
+from python.ss_schedules import (
+  ss_contrib_schedule_for_contractor,
+  ss_contrib_schedule_for_employee,
+  ss_contrib_schedule_by_employer )
+from python.types import Schedule
 
-
-Schedule = Tuple [ # PITFALL: Mypy does not recognize that typing exports GenericAlias,
-                   # so to avoid that spurious warning I'm not signing Schedule's type.
-  float,                       # minimum income threshold
-  Callable [ [float], float ], # computes taxable base from wage
-  float ]                      # average (not marginal!) tax rate
 
 def tuple_by_threshold (
     income : float,
@@ -50,42 +50,5 @@ def mk_pension_employer ( independiente : int,
   else:
     (_, compute_base, rate) = tuple_by_threshold (
         income,
-      ss_contribs_by_employer["pension"] )
+      ss_contrib_schedule_by_employer["pension"] )
     return compute_base( income ) * rate
-
-
-### ### ### ### ### ### ### ###
-###     pension schedules   ###
-### ### ### ### ### ### ### ###
-
-# These are single-key {"pension" : _}dictionaries,
-# which is a little silly.
-# They are like that because this code was copied,
-# only in relevant part, from the tax.co microsimulation,
-# where they have other keys too.
-
-ss_contrib_schedule_for_contractor : \
-  Dict [ str,
-         List [ Schedule ] ] = \
-  { "pension" :
-    [ ( 0, lambda _: 0, 0.0 )
-    , ( min_wage
-      , lambda wage: min( max ( 0.4*wage, min_wage ),
-                          25*min_wage)
-      , 0.16 ) ] }
-
-ss_contrib_schedule_for_employee : \
-  Dict [ str,
-         List [ Schedule ] ] = \
-  { "pension" :
-    [ ( 0,           lambda wage: 0                             , 0.0  )
-    , ( min_wage,    lambda wage: wage                          , 0.04 )
-    , ( 13*min_wage, lambda wage: min ( 0.7*wage, 25*min_wage)  , 0.04 ) ] }
-
-ss_contribs_by_employer : \
-  Dict [ str,
-         List [ Schedule ] ] = \
-  { "pension" :
-    [ ( 0,           lambda wage: 0                           , 0.0)
-    , ( min_wage,    lambda wage: wage                        , 0.12)
-    , ( 13*min_wage, lambda wage: min (0.7*wage, 25*min_wage) , 0.12) ] }
