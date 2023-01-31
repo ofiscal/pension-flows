@@ -2,15 +2,23 @@ from typing import List, Dict, Tuple
 import pandas as pd
 
 from python.get_data import ( deduplicate_rows,
-                              interpret_columns,
-                              raw_renamed_data )
+                              interpret_columns_caracteristicas_personales,
+                              raw_caracteristicas_generales_renamed,
+                              interpret_columns_ocupados,
+                              raw_ocupados_renamed )
+
 from python.ss_functions import ( mk_pension,
                                   mk_pension_employer )
 
-
-ppl = interpret_columns (
+ocup = interpret_columns_ocupados (
   deduplicate_rows (
-    raw_renamed_data () ) )
+    raw_ocupados_renamed () ) )
+
+# TODO: Justify this step, as I did for Ocupados, in check_integrity.py
+cg = interpret_columns_caracteristicas_personales (
+  deduplicate_rows (
+    raw_caracteristicas_generales_renamed () ) )
+
 
 for (new_col, function) in [
     ("employee contribs", mk_pension         ),

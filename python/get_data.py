@@ -3,51 +3,105 @@ from os.path import join
 import pandas as pd
 
 
-columns_of_interest_original_names : \
+columns_of_interest_original_names_universal : \
   List [str] = \
-    [ "fex_c_2011", "DIRECTORIO", "SECUENCIA_P", "ORDEN",
-      "INGLABO", "P6920", "P6430" ]
+    [ "DIRECTORIO", "SECUENCIA_P", "ORDEN", "fex_c_2011" ]
 
-rename_columns : \
+columns_of_interest_original_names_ocupados : \
+  List [str] = (
+    columns_of_interest_original_names_universal +
+    [ "INGLABO", "P6920", "P6430" ] )
+
+columns_of_interest_original_names_caracteristicas_personales : \
+  List [str] = (
+    columns_of_interest_original_names_universal +
+    [ "P6030S3" ] )
+
+rename_columns_universal : \
   Dict [ str, str ] = \
     { "fex_c_2011"  : "weight",
       "DIRECTORIO"  : "DIR",
       "SECUENCIA_P" : "SEC",
-      "ORDEN"       : "ORD",
+      "ORDEN"       : "ORD" }
+
+rename_columns_ocupados : \
+  Dict [ str, str ] = \
+    { **rename_columns_universal,
       "INGLABO"     : "labor income",
 
-      # PITFALL: The RHS of the next two items
+      # PITFALL: The RHS of the following items
       # are names of what the column *will be*
-      # once processed by interpret_columns.
+      # once processed by some interpret_columns_ function.
       # Before that, the names on the RHS below are a lie.
       "P6920"       : "contributes to pension",
       "P6430"       : "independiente" }
 
+rename_columns_caracteristicas_personales : \
+  Dict [ str, str ] = \
+    { **rename_columns_universal,
+
+      # PITFALL: The RHS of the following items
+      # are names of what the column *will be*
+      # once processed by some interpret_columns_ function.
+      # Before that, the names on the RHS below are a lie.
+      "P6030S3" : "age" }
+
 def fetch_one ( filename : str,
-                nickname : str
+                nickname : str,
+                columns_of_interest : List [str],
+                rename_columns : Dict [str, str]
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
       join ( "data/geih/2021-11",
              filename ),
-      usecols = columns_of_interest_original_names,
+      usecols = columns_of_interest,
       sep = ";" )
     . rename ( columns = rename_columns ) )
   df [ "source file" ] = nickname
   return df
 
-def raw_renamed_data () -> pd.DataFrame:
-  return pd.concat (
-    [ fetch_one ( "area_Ocupados.csv"     , "area"     ),
-      fetch_one ( "Cabecera_Ocupados.csv" , "cabecera" ),
-      fetch_one ( "Resto_Ocupados.csv"    , "resto"    ) ] )
+# TODO: Factor out the commonalities from the next two functions
+# (called raw_*_renamed).
 
-def interpret_columns ( df : pd.DataFrame
-                       ) -> pd.DataFrame:
+def raw_ocupados_renamed () -> pd.DataFrame:
+  tail = "_Ocupados.csv"
+  cs = columns_of_interest_original_names_ocupados
+  r = rename_columns_ocupados
+  return pd.concat (
+    [ fetch_one ( "area"     + tail, "area"    , cs, r ),
+      fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
+      fetch_one ( "Resto"    + tail, "resto"   , cs, r ) ] )
+
+def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
+  tail = "_Caracteristicas-generales_Personas.csv"
+  cs = columns_of_interest_original_names_caracteristicas_personales
+  r = rename_columns_caracteristicas_personales
+  return pd.concat (
+    [ fetch_one ( "area"     + tail, "area"    , cs, r ),
+      fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
+      fetch_one ( "Resto"    + tail, "resto"   , cs, r ) ] )
+
+def interpret_columns_universal (
+    df : pd.DataFrame
+) -> pd.DataFrame:
   df [ "DIR" ] = (
     df [ "DIR" ]
     . str . replace ( ",", "" )
     . astype ( int ) )
+  return df
+
+def interpret_columns_caracteristicas_personales (
+    df : pd.DataFrame
+) -> pd.DataFrame:
+  df["age"] = 2021 - (
+    df ["age"]
+    . str.replace ( ",", "" )
+    . astype ('float') )
+  return interpret_columns_universal ( df )
+
+def interpret_columns_ocupados ( df : pd.DataFrame
+                                ) -> pd.DataFrame:
   df [ "contributes to pension" ] = (
     ( df [ "contributes to pension" ] == 1 )
     . astype ( int ) )
@@ -55,7 +109,7 @@ def interpret_columns ( df : pd.DataFrame
     df [ "independiente" ]
     . isin ( [1,2,5] )
     . astype ( int ) )
-  return df
+  return interpret_columns_universal ( df )
 
 def deduplicate_rows ( df : pd.DataFrame
                       ) -> pd.DataFrame:
