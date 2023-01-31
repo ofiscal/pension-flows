@@ -26,8 +26,7 @@ rename_columns_universal : \
 
 rename_columns_ocupados : \
   Dict [ str, str ] = \
-    { **rename_columns_universal,
-      "INGLABO"     : "labor income",
+    { "INGLABO"     : "labor income",
 
       # PITFALL: The RHS of the following items
       # are names of what the column *will be*
@@ -38,9 +37,7 @@ rename_columns_ocupados : \
 
 rename_columns_caracteristicas_personales : \
   Dict [ str, str ] = \
-    { **rename_columns_universal,
-
-      # PITFALL: The RHS of the following items
+    { # PITFALL: The RHS of the following items
       # are names of what the column *will be*
       # once processed by some interpret_columns_ function.
       # Before that, the names on the RHS below are a lie.
@@ -68,7 +65,8 @@ def fetch_one ( filename : str,
 def raw_ocupados_renamed () -> pd.DataFrame:
   tail = "_Ocupados.csv"
   cs = columns_of_interest_original_names_ocupados
-  r = rename_columns_ocupados
+  r = { **rename_columns_universal,
+        **rename_columns_ocupados }
   return pd.concat (
     [ fetch_one ( "area"     + tail, "area"    , cs, r ),
       fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
@@ -77,7 +75,8 @@ def raw_ocupados_renamed () -> pd.DataFrame:
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
   tail = "_Caracteristicas-generales_Personas.csv"
   cs = columns_of_interest_original_names_caracteristicas_personales
-  r = rename_columns_caracteristicas_personales
+  r = { **rename_columns_universal,
+        **rename_columns_caracteristicas_personales }
   return pd.concat (
     [ fetch_one ( "area"     + tail, "area"    , cs, r ),
       fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),

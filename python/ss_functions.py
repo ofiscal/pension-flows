@@ -1,4 +1,4 @@
-# # TODO: Make this into a shared module.
+# # TODO: Make this into a shared (across repos) module.
 #
 # I've copied the functions in this folder from the microsimulation (tax.co).
 # That's expedient but inelegant.

@@ -15,7 +15,6 @@ ocup = interpret_columns_ocupados (
   deduplicate_rows (
     raw_ocupados_renamed () ) )
 
-# TODO: Justify this step, as I did for Ocupados, in check_integrity.py
 cg = interpret_columns_caracteristicas_personales (
   deduplicate_rows (
     raw_caracteristicas_generales_renamed () ) )
