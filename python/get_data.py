@@ -3,21 +3,6 @@ from os.path import join
 import pandas as pd
 
 
-# TODO: These lists are redundant.
-# Instead, use the values from the dicts in `dicts_to_rename_columns`.
-
-original_names_of_columns_of_interest_universal : \
-  List [str] = \
-    [ "DIRECTORIO", "SECUENCIA_P", "ORDEN", "fex_c_2011" ]
-
-original_names_of_columns_of_interest_in_ocupados : \
-  List [str] = \
-    [ "INGLABO", "P6920", "P6430" ]
-
-original_names_of_columns_of_interest_in_caracteristicas_generales : \
-  List [str] = \
-    [ "P6020", "P6030S3" ]
-
 dicts_to_rename_columns : \
   Dict [ str, Dict [ str, str ] ] = \
     { "universal" : { "fex_c_2011"  : "weight",
@@ -55,35 +40,29 @@ def fetch_one ( filename : str,
   df [ "source file" ] = nickname
   return df
 
-def fetch_data_and_rename_columns (
+def fetchImilarData_renameColumns_and_join (
     filename_tail : str,
-    original_names_of_columns_of_interest : List[str],
     how_to_rename_columns : Dict[str,str]
     ) -> pd.DataFrame:
-  (tail,cs,r) = ( filename_tail,
-                  original_names_of_columns_of_interest,
-                  how_to_rename_columns )
+  (tail,orig,r) = (
+    filename_tail,
+    list ( how_to_rename_columns.keys() ), # original names
+    how_to_rename_columns )
   return pd.concat (
-    [ fetch_one ( "area"     + tail, "area"    , cs, r ),
-      fetch_one ( "Cabecera" + tail, "cabecera", cs, r ),
-      fetch_one ( "Resto"    + tail, "resto"   , cs, r ) ] )
+    [ fetch_one ( "area"     + tail, "area"    , orig, r ),
+      fetch_one ( "Cabecera" + tail, "cabecera", orig, r ),
+      fetch_one ( "Resto"    + tail, "resto"   , orig, r ) ] )
 
 def raw_ocupados_renamed () -> pd.DataFrame:
-  return fetch_data_and_rename_columns (
+  return fetchImilarData_renameColumns_and_join (
     filename_tail = "_Ocupados.csv",
-    original_names_of_columns_of_interest = (
-      original_names_of_columns_of_interest_universal +
-      original_names_of_columns_of_interest_in_ocupados ),
     how_to_rename_columns = {
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["ocupados"] } )
 
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
-  return fetch_data_and_rename_columns (
+  return fetchImilarData_renameColumns_and_join (
     filename_tail = "_Caracteristicas-generales_Personas.csv",
-    original_names_of_columns_of_interest = (
-      original_names_of_columns_of_interest_universal +
-      original_names_of_columns_of_interest_in_caracteristicas_generales),
     how_to_rename_columns = {
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["caracteristicas_personales"] } )
