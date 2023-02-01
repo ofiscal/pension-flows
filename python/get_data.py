@@ -10,21 +10,19 @@ dicts_to_rename_columns : \
                       "SECUENCIA_P" : "SEC",
                       "ORDEN"       : "ORD" },
 
-      "caracteristicas_personales" : {
-        # PITFALL: The RHS of the following items
-        # are names of what the column *will be*
-        # once processed by some interpret_columns_ function.
-        # Before that, the names on the RHS below are a lie.
-        "P6020"   : "female",
-        "P6030S3" : "age" },
+      # PITFALL: The RHS of most of the string-string pairs below
+      # are LIES, to begin with.
+      # Only once the data is processed by some interpret_columns_ function
+      # are those column names accurate.
+
+      "caracteristicas_personales" : { "P6020"   : "female",
+                                       "P6030S3" : "age" },
 
       "ocupados" : { "INGLABO"     : "labor income",
-                     # PITFALL: The RHS of the following items
-                     # are names of what the column *will be*
-                     # once processed by some interpret_columns_ function.
-                     # Before that, the names on the RHS below are a lie.
                      "P6920"       : "contributes to pension",
                      "P6430"       : "independiente" },
+
+      "otros_ingresos" : { "P7500S2A1" : "pension income" },
      }
 
 def fetch_one ( filename : str,
@@ -69,6 +67,13 @@ def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["caracteristicas_personales"] } )
 
+def raw_otros_ingresos_renamed () -> pd.DataFrame:
+  return fetchImilarData_renameColumns_and_join (
+    filename_tail = "_Otros-ingresos.csv",
+    how_to_rename_columns = {
+      **dicts_to_rename_columns["universal"],
+      **dicts_to_rename_columns["otros_ingresos"] } )
+
 def interpret_columns_universal (
     df : pd.DataFrame
 ) -> pd.DataFrame:
@@ -97,6 +102,15 @@ def interpret_columns_ocupados ( df : pd.DataFrame
     df [ "independiente" ]
     . isin ( [1,2,5] )
     . astype ( int ) )
+  df [ "in ocupados" ] = 1
+  return interpret_columns_universal ( df )
+
+def interpret_columns_otros_ingresos ( df : pd.DataFrame
+                                      ) -> pd.DataFrame:
+  df["pension income"] = (
+    df ["pension income"]
+    . str.replace ( ",", "" )
+    . astype ('float') )
   return interpret_columns_universal ( df )
 
 def deduplicate_rows ( df : pd.DataFrame
