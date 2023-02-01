@@ -1,7 +1,6 @@
 # PURPOSE:
-# This is not used by main.py but it's important.
-# It verifies that the data makes sense,
-# such that I can reasonably do what I'm doing with it.
+# This is not used by main.py.
+# It justifies the deduplication performed in get_data.py
 
 # USAGE:
 # Just run the whole program and read the output.
@@ -14,14 +13,19 @@ from typing import List, Dict, Tuple
 import pandas as pd
 
 from python.get_data import (
-  rename_columns_ocupados,
-  rename_columns_caracteristicas_personales,
+  dicts_to_rename_columns,
   interpret_columns_caracteristicas_personales,
   interpret_columns_ocupados,
+  interpret_columns_otros_ingresos,
   raw_caracteristicas_generales_renamed,
-  raw_ocupados_renamed )
+  raw_ocupados_renamed,
+  raw_otros_ingresos_renamed,
+  )
 
 
+# Verify there are no duplicates within a given source file,
+# and that duplicates across files never disagree
+# when they define the same thing.
 def analyze_duplicates ( df : pd.DataFrame,
                          columns_to_analyze : List[str]
                         ): # IO : prints to screen
@@ -73,11 +77,21 @@ ocup = interpret_columns_ocupados (
 cg = interpret_columns_caracteristicas_personales (
   raw_caracteristicas_generales_renamed () )
 
+otros = interpret_columns_otros_ingresos (
+  raw_otros_ingresos_renamed () )
+
+
 for (df, nickname, columns_to_analyze) in [
-    ( ocup, "ocupados",
-      list ( rename_columns_ocupados                   . values() ) ),
-    ( cg, "caracteristicas_personales",
-      list ( rename_columns_caracteristicas_personales . values() ) ) ]:
+  ( otros, "otros_ingresos",
+    list ( dicts_to_rename_columns ["otros_ingresos"]
+           . values() ) ),
+  ( ocup, "ocupados",
+    list ( dicts_to_rename_columns ["ocupados"]
+           . values() ) ),
+  ( cg, "caracteristicas_personales",
+    list ( dicts_to_rename_columns ["caracteristicas_personales"]
+          . values() ) ),
+    ]:
   print()
   print("=========== Analyzing " + nickname + " ===========")
   analyze_duplicates(df, columns_to_analyze)
