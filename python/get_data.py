@@ -2,6 +2,11 @@ from typing import List, Dict, Tuple
 from os.path import join
 import pandas as pd
 
+from python.ss_functions import ( mk_pension,
+                                  mk_pension_employer, )
+
+
+primary_keys = ["DIR","SEC","ORD"]
 
 dicts_to_rename_columns : \
   Dict [ str, Dict [ str, str ] ] = \
@@ -120,3 +125,43 @@ def deduplicate_rows ( df : pd.DataFrame
            . groupby ( ["DIR", "SEC", "ORD"] )
            . agg ( "first" )
            . reset_index() )
+
+def mk_pension_contribs ( df : pd.DataFrame
+                         ) -> pd.DataFrame:
+  for (new_col, function) in [
+      ("employee contribs", mk_pension         ),
+      ("employer contribs", mk_pension_employer) ]:
+    df[new_col] = df.apply (
+      lambda row: function (
+        row["independiente"],
+        row["labor income"] )
+      , axis = "columns" )
+  return df
+
+def mkData () -> pd.DataFrame:
+  cg = interpret_columns_caracteristicas_personales (
+    deduplicate_rows (
+      raw_caracteristicas_generales_renamed () ) )
+  otros = interpret_columns_otros_ingresos (
+    deduplicate_rows (
+      raw_otros_ingresos_renamed () ) )
+  ocup = mk_pension_contribs (
+    interpret_columns_ocupados (
+      deduplicate_rows (
+        raw_ocupados_renamed () ) ) )
+  m = pd.merge (
+    otros.drop ( columns = ["weight"] ),
+    pd.merge (
+      cg,
+      ocup.drop ( columns = ["weight"] ),
+      how = "outer",
+      on = primary_keys ),
+    how = "outer",
+    on = primary_keys )
+  m["source file"] = (
+    # https://stackoverflow.com/a/41449714/916142
+    m["source file"]
+    . fillna ( m["source file_x"] )
+    . fillna ( m["source file_y"] ) )
+  return m . drop ( columns = ["source file_x",
+                               "source file_y" ] )
