@@ -106,8 +106,7 @@ def interpret_columns_caracteristicas_personales (
     df ["age"]
     . str.replace ( ",", "" )
     . astype ('float') )
-  df["female"] = 2021 - (
-    df ["female"] - 1 )
+  df["female"] = df ["female"] - 1
   return interpret_columns_universal ( df )
 
 def interpret_columns_ocupados ( df : pd.DataFrame
