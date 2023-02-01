@@ -43,7 +43,7 @@ dicts_to_rename_columns : \
 def fetch_one ( filename : str,
                 nickname : str,
                 columns_of_interest : List [str],
-                rename_columns : Dict [str, str]
+                how_to_rename_columns : Dict [str, str]
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
@@ -51,7 +51,7 @@ def fetch_one ( filename : str,
              filename ),
       usecols = columns_of_interest,
       sep = ";" )
-    . rename ( columns = rename_columns ) )
+    . rename ( columns = how_to_rename_columns ) )
   df [ "source file" ] = nickname
   return df
 
