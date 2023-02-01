@@ -3,6 +3,9 @@ from os.path import join
 import pandas as pd
 
 
+# TODO: These lists are redundant.
+# Instead, use the values from the dicts in `dicts_to_rename_columns`.
+
 original_names_of_columns_of_interest_universal : \
   List [str] = \
     [ "DIRECTORIO", "SECUENCIA_P", "ORDEN", "fex_c_2011" ]
@@ -15,32 +18,27 @@ original_names_of_columns_of_interest_in_caracteristicas_generales : \
   List [str] = \
     [ "P6020", "P6030S3" ]
 
-rename_columns_universal : \
-  Dict [ str, str ] = \
-    { "fex_c_2011"  : "weight",
-      "DIRECTORIO"  : "DIR",
-      "SECUENCIA_P" : "SEC",
-      "ORDEN"       : "ORD" }
+dicts_to_rename_columns : \
+  Dict [ str, Dict [ str, str ] ] = \
+    { "universal" : { "fex_c_2011"  : "weight",
+                      "DIRECTORIO"  : "DIR",
+                      "SECUENCIA_P" : "SEC",
+                      "ORDEN"       : "ORD" },
+      "ocupados" : { "INGLABO"     : "labor income",
 
-rename_columns_ocupados : \
-  Dict [ str, str ] = \
-    { "INGLABO"     : "labor income",
-
-      # PITFALL: The RHS of the following items
-      # are names of what the column *will be*
-      # once processed by some interpret_columns_ function.
-      # Before that, the names on the RHS below are a lie.
-      "P6920"       : "contributes to pension",
-      "P6430"       : "independiente" }
-
-rename_columns_caracteristicas_personales : \
-  Dict [ str, str ] = \
-    { # PITFALL: The RHS of the following items
-      # are names of what the column *will be*
-      # once processed by some interpret_columns_ function.
-      # Before that, the names on the RHS below are a lie.
-      "P6020"   : "female",
-      "P6030S3" : "age" }
+                     # PITFALL: The RHS of the following items
+                     # are names of what the column *will be*
+                     # once processed by some interpret_columns_ function.
+                     # Before that, the names on the RHS below are a lie.
+                     "P6920"       : "contributes to pension",
+                     "P6430"       : "independiente" },
+      "caracteristicas_personales" : {
+        # PITFALL: The RHS of the following items
+        # are names of what the column *will be*
+        # once processed by some interpret_columns_ function.
+        # Before that, the names on the RHS below are a lie.
+        "P6020"   : "female",
+        "P6030S3" : "age" } }
 
 def fetch_one ( filename : str,
                 nickname : str,
@@ -77,8 +75,8 @@ def raw_ocupados_renamed () -> pd.DataFrame:
       original_names_of_columns_of_interest_universal +
       original_names_of_columns_of_interest_in_ocupados ),
     how_to_rename_columns = {
-      **rename_columns_universal,
-      **rename_columns_ocupados } )
+      **dicts_to_rename_columns["universal"],
+      **dicts_to_rename_columns["ocupados"] } )
 
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
   return fetch_data_and_rename_columns (
@@ -87,8 +85,8 @@ def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
       original_names_of_columns_of_interest_universal +
       original_names_of_columns_of_interest_in_caracteristicas_generales),
     how_to_rename_columns = {
-      **rename_columns_universal,
-      **rename_columns_caracteristicas_personales } )
+      **dicts_to_rename_columns["universal"],
+      **dicts_to_rename_columns["caracteristicas_personales"] } )
 
 def interpret_columns_universal (
     df : pd.DataFrame
