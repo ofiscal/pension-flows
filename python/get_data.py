@@ -3,19 +3,17 @@ from os.path import join
 import pandas as pd
 
 
-columns_of_interest_original_names_universal : \
+original_names_of_columns_of_interest_universal : \
   List [str] = \
     [ "DIRECTORIO", "SECUENCIA_P", "ORDEN", "fex_c_2011" ]
 
 original_names_of_columns_of_interest_in_ocupados : \
-  List [str] = (
-    columns_of_interest_original_names_universal +
-    [ "INGLABO", "P6920", "P6430" ] )
+  List [str] = \
+    [ "INGLABO", "P6920", "P6430" ]
 
 original_names_of_columns_of_interest_in_caracteristicas_generales : \
-  List [str] = (
-    columns_of_interest_original_names_universal +
-    [ "P6020", "P6030S3" ] )
+  List [str] = \
+    [ "P6020", "P6030S3" ]
 
 rename_columns_universal : \
   Dict [ str, str ] = \
@@ -75,8 +73,9 @@ def fetch_data_and_rename_columns (
 def raw_ocupados_renamed () -> pd.DataFrame:
   return fetch_data_and_rename_columns (
     filename_tail = "_Ocupados.csv",
-    original_names_of_columns_of_interest = \
-      original_names_of_columns_of_interest_in_ocupados,
+    original_names_of_columns_of_interest = (
+      original_names_of_columns_of_interest_universal +
+      original_names_of_columns_of_interest_in_ocupados ),
     how_to_rename_columns = {
       **rename_columns_universal,
       **rename_columns_ocupados } )
@@ -84,8 +83,9 @@ def raw_ocupados_renamed () -> pd.DataFrame:
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
   return fetch_data_and_rename_columns (
     filename_tail = "_Caracteristicas-generales_Personas.csv",
-    original_names_of_columns_of_interest = \
-      original_names_of_columns_of_interest_in_caracteristicas_generales,
+    original_names_of_columns_of_interest = (
+      original_names_of_columns_of_interest_universal +
+      original_names_of_columns_of_interest_in_caracteristicas_generales),
     how_to_rename_columns = {
       **rename_columns_universal,
       **rename_columns_caracteristicas_personales } )
