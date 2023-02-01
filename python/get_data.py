@@ -9,21 +9,23 @@ dicts_to_rename_columns : \
                       "DIRECTORIO"  : "DIR",
                       "SECUENCIA_P" : "SEC",
                       "ORDEN"       : "ORD" },
-      "ocupados" : { "INGLABO"     : "labor income",
 
-                     # PITFALL: The RHS of the following items
-                     # are names of what the column *will be*
-                     # once processed by some interpret_columns_ function.
-                     # Before that, the names on the RHS below are a lie.
-                     "P6920"       : "contributes to pension",
-                     "P6430"       : "independiente" },
       "caracteristicas_personales" : {
         # PITFALL: The RHS of the following items
         # are names of what the column *will be*
         # once processed by some interpret_columns_ function.
         # Before that, the names on the RHS below are a lie.
         "P6020"   : "female",
-        "P6030S3" : "age" } }
+        "P6030S3" : "age" },
+
+      "ocupados" : { "INGLABO"     : "labor income",
+                     # PITFALL: The RHS of the following items
+                     # are names of what the column *will be*
+                     # once processed by some interpret_columns_ function.
+                     # Before that, the names on the RHS below are a lie.
+                     "P6920"       : "contributes to pension",
+                     "P6430"       : "independiente" },
+     }
 
 def fetch_one ( filename : str,
                 nickname : str,
