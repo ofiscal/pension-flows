@@ -19,6 +19,16 @@ cg = interpret_columns_caracteristicas_personales (
   deduplicate_rows (
     raw_caracteristicas_generales_renamed () ) )
 
+# Compute contributions in "ocup".
+for (new_col, function) in [
+    ("employee contribs", mk_pension         ),
+    ("employer contribs", mk_pension_employer) ]:
+  ocup[new_col] = ocup.apply (
+    lambda row: function (
+      row["independiente"],
+      row["labor income"] )
+    , axis = "columns" )
+
 # Not everyone is in Ocupados.
 # The default "both" merge strategy returns the intersection,
 # and hence only the Ocupados,
@@ -30,12 +40,3 @@ allData = cg.merge ( ocup,
 
 allOcup = cg.merge ( ocup,
                      on = ["DIR","SEC","ORD"] )
-
-for (new_col, function) in [
-    ("employee contribs", mk_pension         ),
-    ("employer contribs", mk_pension_employer) ]:
-  ocup[new_col] = ocup.apply (
-    lambda row: function (
-      row["independiente"],
-      row["labor income"] )
-    , axis = "columns" )
