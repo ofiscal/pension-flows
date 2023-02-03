@@ -123,7 +123,7 @@ def deduplicate_rows ( df : pd.DataFrame
   # See `python.check_integrity.py` for why this is justified.
   return ( df
            . groupby ( ["DIR", "SEC", "ORD"] )
-           . agg ( "first" )
+           . agg ( "first" ) # gives the first non-null, not just the first
            . reset_index() )
 
 def mk_pension_contribs ( df : pd.DataFrame
@@ -145,7 +145,8 @@ def mkData () -> pd.DataFrame:
   otros = interpret_columns_otros_ingresos (
     deduplicate_rows (
       raw_otros_ingresos_renamed () ) )
-  ocup = mk_pension_contribs (
+  ocup = mk_pension_contribs ( # This extra step is not present
+                               # in the other two tables.
     interpret_columns_ocupados (
       deduplicate_rows (
         raw_ocupados_renamed () ) ) )
