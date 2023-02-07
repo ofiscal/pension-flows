@@ -20,8 +20,8 @@ dicts_to_rename_columns : \
       # Only once the data is processed by some interpret_columns_ function
       # are those column names accurate.
 
-      "caracteristicas_personales" : { "P6020"   : "female",
-                                       "P6030S3" : "age" },
+      "caracteristicas_personales" : { "P6020" : "female",
+                                       "P6040" : "age" },
 
       "ocupados" : { "INGLABO" : "labor income",
                      "P6920"   : "contributes to pension",
@@ -91,10 +91,6 @@ def interpret_columns_universal (
 def interpret_columns_caracteristicas_personales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
-  df["age"] = 2021 - (
-    df ["age"]
-    . str.replace ( ",", "" )
-    . astype ('float') )
   df["female"] = df ["female"] - 1
   return interpret_columns_universal ( df )
 
