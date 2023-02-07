@@ -45,7 +45,7 @@ def fetch_one ( filename : str,
   df [ "source file" ] = nickname
   return df
 
-def fetchImilarData_renameColumns_and_join (
+def fetchSmilarData_renameColumns_and_join (
     filename_tail : str,
     how_to_rename_columns : Dict[str,str]
     ) -> pd.DataFrame:
@@ -59,21 +59,21 @@ def fetchImilarData_renameColumns_and_join (
       fetch_one ( "Resto"    + tail, "resto"   , orig, r ) ] )
 
 def raw_ocupados_renamed () -> pd.DataFrame:
-  return fetchImilarData_renameColumns_and_join (
+  return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Ocupados.csv",
     how_to_rename_columns = {
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["ocupados"] } )
 
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
-  return fetchImilarData_renameColumns_and_join (
+  return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Caracteristicas-generales_Personas.csv",
     how_to_rename_columns = {
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["caracteristicas_personales"] } )
 
 def raw_otros_ingresos_renamed () -> pd.DataFrame:
-  return fetchImilarData_renameColumns_and_join (
+  return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Otros-ingresos.csv",
     how_to_rename_columns = {
       **dicts_to_rename_columns["universal"],
