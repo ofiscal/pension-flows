@@ -23,9 +23,9 @@ dicts_to_rename_columns : \
       "caracteristicas_personales" : { "P6020"   : "female",
                                        "P6030S3" : "age" },
 
-      "ocupados" : { "INGLABO"     : "labor income",
-                     "P6920"       : "contributes to pension",
-                     "P6430"       : "independiente" },
+      "ocupados" : { "INGLABO" : "labor income",
+                     "P6920"   : "contributes to pension",
+                     "P1879"   : "independiente" },
 
       "otros_ingresos" : { "P7500S2A1" : "pension income" },
      }
@@ -103,10 +103,10 @@ def interpret_columns_ocupados ( df : pd.DataFrame
   df [ "contributes to pension" ] = (
     ( df [ "contributes to pension" ] == 1 )
     . astype ( int ) )
-  df [ "independiente" ] = ( # easier?: P1879 missing, in Ocupados (all and only)
-    df [ "independiente" ]
-    . isin ( [1,2,5] )
-    . astype ( int ) )
+  df [ "independiente" ] = ( # This field begins as someone's reason for working informally. Thus, if it is not null, they are working informally.
+    ( ~ ( df [ "independiente" ]
+          . isnull() ) )
+    . astype("int") )
   df [ "in ocupados" ] = 1
   return interpret_columns_universal ( df )
 
