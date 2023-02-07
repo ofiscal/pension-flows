@@ -103,7 +103,7 @@ def interpret_columns_ocupados ( df : pd.DataFrame
   df [ "contributes to pension" ] = (
     ( df [ "contributes to pension" ] == 1 )
     . astype ( int ) )
-  df [ "independiente" ] = (
+  df [ "independiente" ] = ( # easier?: P1879 missing, in Ocupados (all and only)
     df [ "independiente" ]
     . isin ( [1,2,5] )
     . astype ( int ) )
@@ -122,7 +122,7 @@ def deduplicate_rows ( df : pd.DataFrame
                       ) -> pd.DataFrame:
   # See `python.check_integrity.py` for why this is justified.
   return ( df
-           . groupby ( ["DIR", "SEC", "ORD"] )
+           . groupby ( primary_keys )
            . agg ( "first" ) # gives the first non-null, not just the first
            . reset_index() )
 
