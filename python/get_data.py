@@ -155,6 +155,7 @@ def mkData () -> pd.DataFrame:
       on = primary_keys ),
     how = "outer",
     on = primary_keys )
+  m["in ocupados"] = m["in ocupados"] . fillna(0)
   m["source file"] = (
     # https://stackoverflow.com/a/41449714/916142
     m["source file"]
