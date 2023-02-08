@@ -1,5 +1,6 @@
 from typing import List, Dict, Tuple
 from os.path import join
+from numpy import nan
 import pandas as pd
 
 from python.ss_functions import ( mk_pension,
@@ -116,13 +117,27 @@ def interpret_columns_otros_ingresos ( df : pd.DataFrame
     . astype ('float') )
   return interpret_columns_universal ( df )
 
-def deduplicate_rows ( df : pd.DataFrame
-                      ) -> pd.DataFrame:
+def deduplicate_rows (
+    df : pd.DataFrame,
+    primary_keys = List[str], # PITFALL: Argument needed for testing.
+) -> pd.DataFrame:
   # See `python.check_integrity.py` for why this is justified.
   return ( df
            . groupby ( primary_keys )
            . agg ( "first" ) # gives the first non-null, not just the first
            . reset_index() )
+
+def test_deduplicate_rows ():
+  assert (
+    deduplicate_rows (
+      pd.DataFrame ( { "id" : [1  ,   1,  2],
+                       "a"  : [nan,  11, 12],
+                       "b"  : [21 , nan, 22], } ),
+      primary_keys = ["id"] )
+    . equals (
+      pd.DataFrame ( { "id" : pd.Series( [1 ,  2] ),
+                       "a"  : pd.Series( [11, 12], dtype = float),
+                       "b"  : pd.Series( [21, 22], dtype = float), } ) ) )
 
 def mk_pension_contribs ( df : pd.DataFrame
                          ) -> pd.DataFrame:
@@ -139,15 +154,18 @@ def mk_pension_contribs ( df : pd.DataFrame
 def mkData () -> pd.DataFrame:
   cg = interpret_columns_caracteristicas_personales (
     deduplicate_rows (
-      raw_caracteristicas_generales_renamed () ) )
+      raw_caracteristicas_generales_renamed (),
+      primary_keys = primary_keys ) )
   otros = interpret_columns_otros_ingresos (
     deduplicate_rows (
-      raw_otros_ingresos_renamed () ) )
+      raw_otros_ingresos_renamed (),
+      primary_keys = primary_keys ) )
   ocup = mk_pension_contribs ( # This extra step is not present
                                # in the other two tables.
     interpret_columns_ocupados (
       deduplicate_rows (
-        raw_ocupados_renamed () ) ) )
+        raw_ocupados_renamed (),
+        primary_keys = primary_keys ) ) )
 
   m = pd.merge (
     otros.drop ( columns = ["weight"] ),
