@@ -15,7 +15,7 @@ def test_drop_none_values_from_dict ():
            == {1:2, None:4} )
 
 def df_subset_from_constraints (
-    df     : pd.DataFrame,
+    df                   : pd.DataFrame,
     colname_colval_pairs : Dict,
       # PITFALL: colname_colval_pairs has a dependent type
       # -- specifically Dict[ s : str,
@@ -24,8 +24,8 @@ def df_subset_from_constraints (
   """Given a dictionary of constraints of the form { column_name : value },returns the subset of `df` satisfying those constraints. If there are no constraints, it returns all of `df`."""
   def subsetter ( df : pd.DataFrame,
                   colname : str,
-                  colval # PITFALL: Dependent type.
-                         # type(colval) = type( df[colname] )
+                  colval : Any # PITFALL: Dependent type.
+                               # type(colval) = type( df[colname] )
                  ) -> pd.DataFrame:
     return (
       # PITFALL: It might seem like the case `colval is None` can be ignored.
