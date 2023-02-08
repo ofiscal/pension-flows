@@ -22,22 +22,10 @@ def df_subset_from_constraints (
       #                       v : type( df[s] ) ]
 ) -> pd.DataFrame :
   """Given a dictionary of constraints of the form { column_name : value },returns the subset of `df` satisfying those constraints. If there are no constraints, it returns all of `df`."""
-  def subsetter ( df : pd.DataFrame,
-                  colname : str,
-                  colval : Any # PITFALL: Dependent type.
-                               # type(colval) = type( df[colname] )
-                 ) -> pd.DataFrame:
-    return (
-      # PITFALL: It might seem like the case `colval is None` can be ignored.
-      # But the easiest way to use `df_subset_from_constraints`
-      # is to feed it list comprehensions that iterate `colval`
-      # across all values of `colname` and, in addition, across `None`.
-      df
-      if colval is None
-      else df[ df[colname] == colval] )
-
-  for k,v in colname_colval_pairs.items():
-    df = subsetter ( df, k, v )
+  for colname,colval in (
+      drop_none_values_from_dict ( colname_colval_pairs )
+      . items() ):
+    df = df[ df[colname] == colval]
   return df
 
 def test_df_subset_from_constraints ():
