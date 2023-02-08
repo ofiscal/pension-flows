@@ -23,29 +23,6 @@ def draw_cdf_of (
                ".png" )
   plt.close()
 
-def df_subset ( female   : int = None,
-                area     : str = None,
-                informal : int = None
-               ) -> pd.DataFrame:
-
-  def subsetter ( df : pd.DataFrame,
-                  colname : str,
-                  colval # Its type depends on colname's type:
-                         # int if colname in [female, informal]
-                         # str if colname == area
-                 ) -> pd.DataFrame:
-    return ( df
-             if colval is None
-             else df[ df["colname"] == colval] )
-
-  return subsetter (
-    subsetter (
-      subsetter ( df, "female", female ),
-      "area", area ),
-    "informal", informal )
-
-
-
 [ (a,b)
   for a in [0,1,None]
   for b in [0,1] ]
