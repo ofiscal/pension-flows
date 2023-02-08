@@ -1,7 +1,18 @@
 import pandas as pd
-from typing import List, Dict
+from typing import List, Dict, Any
 from python.get_data import mkData
 
+
+def drop_none_values_from_dict ( d : Dict[Any,Any]
+                                ) -> Dict[Any,Any]:
+  # PITFALL: Keeps pairs for which k is None.
+  return { k:v
+           for k,v in d.items()
+           if v != None }
+
+def test_drop_none_values_from_dict ():
+  assert ( drop_none_values_from_dict ( {1:2, 3:None, None:4} )
+           == {1:2, None:4} )
 
 def df_subset_from_constraints (
     df     : pd.DataFrame,
@@ -16,7 +27,14 @@ def df_subset_from_constraints (
                   colval # PITFALL: Dependent type.
                          # type(colval) = type( df[colname] )
                  ) -> pd.DataFrame:
-    return df[ df[colname] == colval]
+    return (
+      # PITFALL: It might seem like the case `colval is None` can be ignored.
+      # But the easiest way to use `df_subset_from_constraints`
+      # is to feed it list comprehensions that iterate `colval`
+      # across all values of `colname` and, in addition, across `None`.
+      df
+      if colval is None
+      else df[ df[colname] == colval] )
 
   for k,v in colname_colval_pairs.items():
     df = subsetter ( df, k, v )
