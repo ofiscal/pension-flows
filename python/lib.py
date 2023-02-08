@@ -23,7 +23,10 @@ def df_subset_from_constraints (
   return df
 
 def test_df_subset_from_constraints ():
-  df = mkData()
+  df = pd.DataFrame (
+    { "female"  : [0,0,0,0,1,1,1,1],
+      "indep"   : [0,0,1,1,0,0,1,1],
+      "beetles" : [0,1,0,1,0,1,0,1] } )
   assert ( df_subset_from_constraints ( df,
                                         { "female" : 1,
                                           "indep" : 0 } )
