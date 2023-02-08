@@ -29,10 +29,10 @@ def tuple_by_threshold (
   if True:
       return tuple_by_threshold( income, schedule[1:] )
 
-def mk_pension ( independiente : int,
+def mk_pension ( indep : int,
                  income : float
                 ) -> float:
-  if independiente:
+  if indep:
     (_, compute_base, rate) = tuple_by_threshold (
       income,
       ss_contrib_schedule_for_contractor["pension"] )
@@ -43,10 +43,10 @@ def mk_pension ( independiente : int,
       ss_contrib_schedule_for_employee["pension"] )
     return compute_base( income ) * rate
 
-def mk_pension_employer ( independiente : int,
+def mk_pension_employer ( indep : int,
                           income : float
                          ) -> float:
-  if independiente: return 0
+  if indep: return 0
   else:
     (_, compute_base, rate) = tuple_by_threshold (
         income,

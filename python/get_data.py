@@ -23,9 +23,11 @@ dicts_to_rename_columns : \
       "caracteristicas_personales" : { "P6020" : "female",
                                        "P6040" : "age" },
 
-      "ocupados" : { "INGLABO" : "labor income",
-                     "P6920"   : "contributes to pension",
-                     "P1879"   : "independiente" },
+      "ocupados" : {
+        "INGLABO" : "labor income",
+        "P6920"   : "formal", # <=> contributes to a pension
+        "P1879"   : "indep" # <=> gave a reason for working indep
+      },
 
       "otros_ingresos" : { "P7500S2A1" : "pension income" },
      }
@@ -96,11 +98,11 @@ def interpret_columns_caracteristicas_personales (
 
 def interpret_columns_ocupados ( df : pd.DataFrame
                                 ) -> pd.DataFrame:
-  df [ "contributes to pension" ] = (
-    ( df [ "contributes to pension" ] == 1 )
+  df [ "formal" ] = (
+    ( df [ "formal" ] == 1 )
     . astype ( int ) )
-  df [ "independiente" ] = ( # This field begins as someone's reason for working informally. Thus, if it is not null, they are working informally.
-    ( ~ ( df [ "independiente" ]
+  df [ "indep" ] = (
+    ( ~ ( df [ "indep" ]
           . isnull() ) )
     . astype("int") )
   df [ "in ocupados" ] = 1
@@ -129,7 +131,7 @@ def mk_pension_contribs ( df : pd.DataFrame
       ("employer contribs", mk_pension_employer) ]:
     df[new_col] = df.apply (
       lambda row: function (
-        row["independiente"],
+        row["indep"],
         row["labor income"] )
       , axis = "columns" )
   return df
@@ -146,6 +148,7 @@ def mkData () -> pd.DataFrame:
     interpret_columns_ocupados (
       deduplicate_rows (
         raw_ocupados_renamed () ) ) )
+
   m = pd.merge (
     otros.drop ( columns = ["weight"] ),
     pd.merge (
@@ -155,8 +158,8 @@ def mkData () -> pd.DataFrame:
       on = primary_keys ),
     how = "outer",
     on = primary_keys )
-  m["source file"] = (
-    # https://stackoverflow.com/a/41449714/916142
+  m["source file"] = ( # Reduce the three "source file" fields to one.
+                       # See https://stackoverflow.com/a/41449714/916142
     m["source file"]
     . fillna ( m["source file_x"] )
     . fillna ( m["source file_y"] ) )
