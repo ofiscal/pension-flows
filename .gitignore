@@ -2,3 +2,7 @@
 *.csv
 *.pdf
 __pycache__
+.emacs*
+git-comment
+temp*
+TAGS*
