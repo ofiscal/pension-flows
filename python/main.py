@@ -16,7 +16,8 @@ def draw_cdf_of (
     ct : Dict[ str, Any ],
 ): # pure IO [writes a file]
   cdf( df[colname],
-       logx = True )
+       logx = True,
+       xmin = 1e3 ) # xmin must be > 0 for the log scale to work
   plt.title("CDF of " + colname)
   plt.xlabel("COP")
   plt.ylabel("Probability mass")
