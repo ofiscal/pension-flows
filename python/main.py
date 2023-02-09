@@ -39,9 +39,10 @@ constraints : List[ Dict[ str, Any ] ] = [
 
 for ct in constraints:
   for col in [ "labor income", "pension income" ]:
-    df0 = df_subset_from_constraints ( df, ct )
     if len(df0) == 0:
       print( "WARNING: No data satisfies " + str(ct) )
+    df0 = ( df0_from_constraints ( df, ct )
+                  . dropna() )
     else:
       draw_cdf_of (
         colname = col,
