@@ -1,9 +1,11 @@
-from typing import List, Dict, Tuple
+from typing import List, Dict, Tuple, Any
 import pandas as pd
 import matplotlib.pyplot as plt
 
 from python.get_data import mkData
 from ofiscal_utils.draw.draw import cdf
+from python.lib import ( constraint_string,
+                         df_subset_from_constraints )
 
 
 df = mkData()
@@ -18,9 +20,9 @@ def draw_cdf_of (
   plt.title("CDF of " + colname)
   plt.xlabel("COP")
   plt.ylabel("Probability mass")
-  plt.savefig( "CDF-of-" + colname   +
-               "-for-"   + subsample +
-               ".png" )
+  plt.savefig( "CDF-of-" + colname
+               + constraint_string( ct )
+               + ".png" )
   plt.close()
 
 [ (a,b)

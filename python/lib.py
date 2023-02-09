@@ -3,11 +3,10 @@
 # def drop_none_values_from_dict ( d : Dict[Any,Any]
 #                                 ) -> Dict[Any,Any]:
 # def df_name_from_constraints (
-#     basename             : str,
 #     colname_colval_pairs : Dict[str, Any],
 # ) -> str:
 #
-# def df_subset_from_constraintso (
+# def df_subset_from_constraints (
 #     df                   : pd.DataFrame,
 #     colname_colval_pairs : Dict, # Dict[ s : str, v : type( df[s] ) ]
 # ) -> pd.DataFrame :
@@ -30,25 +29,23 @@ def test_drop_none_values_from_dict ():
   assert ( drop_none_values_from_dict ( {1:2, 3:None, None:4} )
            == {1:2, None:4} )
 
-def df_name_from_constraints (
-    basename             : str,
+def constraint_string (
     colname_colval_pairs : Dict[str, Any],
 ) -> str:
-  name = basename
+  name = ""
   for colname,colval in (
       drop_none_values_from_dict ( colname_colval_pairs )
       . items() ):
     name = name + "." + colname + "=" + str(colval)
   return name
 
-def test_df_name_from_constraints ():
+def test_constraint_string ():
   assert (
-    df_name_from_constraints (
-      "bond",
+    constraint_string (
       { "double-o"  : 7,
         "nemesis" : "Goldfinger" } )
-    == "bond.double-o=7.nemesis=Goldfinger" )
-  assert df_name_from_constraints("yo",{}) == "yo"
+    == ".double-o=7.nemesis=Goldfinger" )
+  assert constraint_string ({}) == ""
 
 def df_subset_from_constraints (
     df                   : pd.DataFrame,
