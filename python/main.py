@@ -13,7 +13,7 @@ df = mkData()
 def draw_cdf_of (
     colname : str,
     df : pd.DataFrame,
-    subsample : str
+    ct : Dict[ str, Any ],
 ): # pure IO [writes a file]
   cdf( df[colname],
        logx = True )
@@ -25,13 +25,24 @@ def draw_cdf_of (
                + ".png" )
   plt.close()
 
-[ (a,b)
-  for a in [0,1,None]
-  for b in [0,1] ]
+constraints : List[ Dict[ str, Any ] ] = [
+  { "female": female,
+    "source file" : source,
+    "formal" : formal,
+    "indep" : indep
+   }
+  for source in ["area","cabecera"]
+  for female in [0,1]
+  for formal in [0,1]
+  for indep  in [0,1] ]
 
-women    = df[ df["female"]      == 1]
-men      = df[ df["female"]      == 0]
-rural    = df[ df["source file"] == "area"]
-urban    = df[ df["source file"] == "cabecera"]
-formal   = df[ df["formal"]      == 1]
-informal = df[ df["formal"]      == 0]
+for ct in constraints:
+  for col in [ "labor income", "pension income" ]:
+    df0 = df_subset_from_constraints ( df, ct )
+    if len(df0) == 0:
+      print( "WARNING: No data satisfies " + str(ct) )
+    else:
+      draw_cdf_of (
+        colname = col,
+        df = df0,
+        ct = ct )
