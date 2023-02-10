@@ -30,22 +30,21 @@ with open( missing_cdfs_path, "w" ) as missing_cdfs_file:
   missing_cdfs_file.write( "" ) # Empty the file.
 
 for ct in constraints:
-  df_subset = ( df_subset_from_constraints ( df, ct )
-                . dropna() )
-  if len(df_subset) == 0:
-    with open(missing_cdfs_path, "a") as missing_cdfs_file:
-      missing_cdfs_file.write ( "No data satisfies "
-                                + str(ct) + "\n" )
-  else:
-    for col in [ "labor income", "pension income" ]:
-      draw_cdf_of_money (
-        colname = col,
-        df = df_subset,
-        ct = ct,
-        output_filename = join (
-          output_folder, ( "CDF-of-" + col
-                           + constraint_string( ct )
-                           + ".png" ) ) )
+  df_subset = df_subset_from_constraints ( df, ct )
+  for col in [ "labor income", "pension income" ]:
+    if len( df_subset[col] .dropna() ) == 0:
+      with open(missing_cdfs_path, "a") as missing_cdfs_file:
+        missing_cdfs_file.write (
+          "None of the " + col + " series satisfies "
+          + str(ct) + "\n" )
+    else: draw_cdf_of_money (
+      colname = col,
+      df = df_subset,
+      ct = ct,
+      output_filename = join (
+        output_folder, ( "CDF-of-" + col
+                         + constraint_string( ct )
+                         + ".png" ) ) )
 
 with open( join ( output_folder, "README.md" ),
            "w" ) as readme:
