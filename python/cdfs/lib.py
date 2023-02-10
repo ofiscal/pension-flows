@@ -13,7 +13,8 @@ def draw_cdf_of_money (
 ): # pure IO [writes a file]
   cdf( df[colname],
        logx = True,
-       sample_size = len (df_subset),
+       sample_size = len ( df[colname]
+                           . dropna() ),
        xmin = 1e3 ) # xmin must be > 0 for the log scale to work
   plt.title("CDF of " + colname)
   plt.xlabel("COP")
