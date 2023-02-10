@@ -30,7 +30,8 @@ dicts_to_rename_columns : \
         "P1879"   : "indep" # <=> gave a reason for working indep
       },
 
-      "otros_ingresos" : { "P7500S2A1" : "pension income" },
+      "otros_ingresos" : { "P7500S2A1" : "pension income",
+                           "P7500S1A1" : "rental income", },
      }
 
 def fetch_one ( filename : str,
@@ -113,6 +114,10 @@ def interpret_columns_otros_ingresos ( df : pd.DataFrame
                                       ) -> pd.DataFrame:
   df["pension income"] = (
     df ["pension income"]
+    . str.replace ( ",", "" )
+    . astype ('float') )
+  df["rental income"] = (
+    df ["rental income"]
     . str.replace ( ",", "" )
     . astype ('float') )
   return interpret_columns_universal ( df )
