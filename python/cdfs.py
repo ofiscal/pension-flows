@@ -12,7 +12,7 @@ from python.lib import ( constraint_string,
 
 df = mkData()
 
-def draw_cdf_of (
+def draw_cdf_of_money (
     colname         : str,
     df              : pd.DataFrame,
     ct              : Dict[ str, Any ],
@@ -55,7 +55,7 @@ for ct in constraints:
                                 + str(ct) + "\n" )
   else:
     for col in [ "labor income", "pension income" ]:
-      draw_cdf_of (
+      draw_cdf_of_money (
         colname = col,
         df = df_subset,
         ct = ct,
