@@ -1,13 +1,6 @@
-from os.path import join
 from typing import List, Dict, Tuple, Any
 import pandas as pd
 import matplotlib.pyplot as plt
-
-from python.get_data import mkData
-from ofiscal_utils.draw.draw import cdf
-from python.lib import ( constraint_string,
-                         df_subset_from_constraints,
-                         drop_none_values_from_dict, )
 
 
 def near_nonzero (a : float, b : float) -> bool:
@@ -66,6 +59,3 @@ def test_subsidy ():
   assert near_nonzero ( subsidy(when_subsidy_disappears), 0 )
   assert near_nonzero ( subsidy(when_subsidy_disappears * 2), 0 )
   assert near_nonzero ( subsidy(when_subsidy_disappears * 3), 0 )
-
-
-# df = mkData()
