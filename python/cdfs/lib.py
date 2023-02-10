@@ -11,12 +11,11 @@ def draw_cdf_of_money (
     ct              : Dict[ str, Any ],
     output_filename : str,
 ): # pure IO [writes a file]
+  sample_size = len ( df[colname] . dropna() )
   cdf( df[colname],
        logx = True,
-       sample_size = len ( df[colname]
-                           . dropna() ),
        xmin = 1e3 ) # xmin must be > 0 for the log scale to work
-  plt.title("CDF of " + colname)
+  plt.title("CDF of " + colname + " (n = " + str(sample_size) + ")")
   plt.xlabel("COP")
   plt.ylabel("Probability mass")
   plt.savefig( output_filename )
