@@ -1,3 +1,17 @@
+# DEFINES:
+#
+# def near_nonzero (a : float, b : float) -> bool:
+#
+# subsidy_if_broke            : float # COP per month
+# when_subsidy_starts_to_wane : float # COP per month
+# when_subsidy_disappears     : float # COP per month
+# negative_dSubsidy_dIncome : float
+#
+# def subsidy ( income : float ) -> float:
+#
+# and tests for all functions.
+
+
 from typing import List, Dict, Tuple, Any
 import pandas as pd
 import matplotlib.pyplot as plt
