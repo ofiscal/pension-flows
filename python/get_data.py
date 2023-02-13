@@ -187,5 +187,11 @@ def mkData () -> pd.DataFrame:
     m["source file"]
     . fillna ( m["source file_x"] )
     . fillna ( m["source file_y"] ) )
+
+  for c in ["pension income",
+            "labor income",
+            "rental income"]:
+    m[c] = m[c].fillna(0)
+
   return m . drop ( columns = ["source file_x",
                                "source file_y" ] )
