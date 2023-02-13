@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 
 from python.get_data import mkData
 from python.renta_basica.lib import subsidy
+import python.renta_basica.lib as rb
 from python.cdfs.lib import draw_cdf_of_money
 
 
@@ -61,11 +62,29 @@ for real_pension_threshold in [1e5, 7e5]: # COP per month
   # under the parameters stated in python.renta_basica.lib,
   # if it goes only to people age 65 or older.
 
-  print ( "threshold: ",
+  print ( "threshold to consider reported pension income a real pension: ",
           str(real_pension_threshold),
           "\n",
-          "cost in billones de COP: ",
-          str ( ( df["subsidy"] *
+          "yealy cost in billones de COP: ",
+          str ( 12 * # yearly
+                ( df["subsidy"] *
                   df["weight"] )
                 . sum() / 1e12 ),
           "\n" )
+
+
+
+old = df[ df["age"] >= 65 ]
+
+print( "subsidy_if_broke: ",            rb.subsidy_if_broke )
+print( "when_subsidy_starts_to_wane: ", rb.when_subsidy_starts_to_wane )
+print( "when_subsidy_disappears: ",     rb.when_subsidy_disappears )
+
+print ("Millions of people 65 or over: ",
+       str ( old["weight"] . sum() / 1e6 ) )
+print ("Millions of people 65 or over excluded from the subsidy (because they have a real-looking pension): ",
+       str ( old [ old["pension income"] >
+                   real_pension_threshold ]
+             ["weight"]
+             . sum()
+             / 1e6 ) )
