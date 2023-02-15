@@ -12,7 +12,7 @@ Schedule = Tuple [
 
 @dataclass
 class BasicIncome:
-  subsidy_if_broke            : float # COP per month
-  when_subsidy_starts_to_wane : float # COP per month
-  when_subsidy_disappears     : float # COP per month.
+  subsidy_if_broke            : float # minimum wages per month
+  when_subsidy_starts_to_wane : float # minimum wages per month
+  when_subsidy_disappears     : float # minimum wages per month.
     # Should be bigger than `when_subsidy_starts_to_wane`.

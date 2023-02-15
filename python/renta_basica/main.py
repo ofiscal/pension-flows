@@ -45,18 +45,18 @@ real_pension_threshold = 5e5
 # === Computing the cost of the renta básica ===
 # ==============================================
 
-bi_500_0_1 = BasicIncome ( subsidy_if_broke = 500e3,
+bi_500_0_1 = BasicIncome ( subsidy_if_broke = 1/2,
                            when_subsidy_starts_to_wane = 0,
-                           when_subsidy_disappears = 1e6 )
-bi_500_1_2 = BasicIncome ( subsidy_if_broke = 500e3,
-                           when_subsidy_starts_to_wane = 1e6 ,
-                           when_subsidy_disappears = 2e6 )
-bi_500_1_3 = BasicIncome ( subsidy_if_broke = 500e3,
-                           when_subsidy_starts_to_wane = 1e6,
-                           when_subsidy_disappears = 3e6 )
-bi_500_2_4 = BasicIncome ( subsidy_if_broke = 500e3,
-                           when_subsidy_starts_to_wane = 2e6,
-                           when_subsidy_disappears = 4e6 )
+                           when_subsidy_disappears = 1 )
+bi_500_1_2 = BasicIncome ( subsidy_if_broke = 1/2,
+                           when_subsidy_starts_to_wane = 1 ,
+                           when_subsidy_disappears = 2 )
+bi_500_1_3 = BasicIncome ( subsidy_if_broke = 1/2,
+                           when_subsidy_starts_to_wane = 1,
+                           when_subsidy_disappears = 3 )
+bi_500_2_4 = BasicIncome ( subsidy_if_broke = 1/2,
+                           when_subsidy_starts_to_wane = 2,
+                           when_subsidy_disappears = 4 )
 
 name_subsidy_pairs : List[ Tuple[ str,
                                   BasicIncome ] ] = \
