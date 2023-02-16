@@ -37,20 +37,11 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
                        "P7500S1A1" : "rental income", },
 }
 
-def interpret_columns_universal (
-    df : pd.DataFrame
-) -> pd.DataFrame:
-  df [ "DIR" ] = (
-    df [ "DIR" ]
-    . str . replace ( ",", "" )
-    . astype ( int ) )
-  return df
-
 def interpret_columns_caracteristicas_personales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
   df["female"] = df ["female"] - 1
-  return interpret_columns_universal ( df )
+  return df
 
 def interpret_columns_ocupados ( df : pd.DataFrame
                                 ) -> pd.DataFrame:
@@ -62,19 +53,7 @@ def interpret_columns_ocupados ( df : pd.DataFrame
           . isnull() ) )
     . astype("int") )
   df [ "in ocupados" ] = 1
-  return interpret_columns_universal ( df )
-
-def interpret_columns_otros_ingresos ( df : pd.DataFrame
-                                      ) -> pd.DataFrame:
-  df["pension income"] = (
-    df ["pension income"]
-    . str.replace ( ",", "" )
-    . astype ('float') )
-  df["rental income"] = (
-    df ["rental income"]
-    . str.replace ( ",", "" )
-    . astype ('float') )
-  return interpret_columns_universal ( df )
+  return df
 
 def deduplicate_rows (
     df : pd.DataFrame,

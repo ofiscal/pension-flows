@@ -7,7 +7,6 @@ from python.build.common import (
   dicts_to_rename_columns,
   interpret_columns_caracteristicas_personales,
   interpret_columns_ocupados,
-  interpret_columns_otros_ingresos,
   deduplicate_rows,
   mk_pension_contribs )
 
@@ -67,21 +66,47 @@ def raw_otros_ingresos_renamed () -> pd.DataFrame:
       **dicts_to_rename_columns["universal"],
       **dicts_to_rename_columns["otros_ingresos"] } )
 
+def interpret_columns_universal_2021 (
+    # Make a column numeric.
+    df : pd.DataFrame
+) -> pd.DataFrame:
+  df [ "DIR" ] = (
+    df [ "DIR" ]
+    . str . replace ( ",", "" )
+    . astype ( int ) )
+  return df
+
+def interpret_columns_otros_ingresos ( df : pd.DataFrame
+                                      ) -> pd.DataFrame:
+  # Make two columns numeric.
+  df["pension income"] = (
+    df ["pension income"]
+    . str.replace ( ",", "" )
+    . astype ('float') )
+  df["rental income"] = (
+    df ["rental income"]
+    . str.replace ( ",", "" )
+    . astype ('float') )
+  return df
+
 def mkData () -> pd.DataFrame:
   cg = interpret_columns_caracteristicas_personales (
-    deduplicate_rows (
-      raw_caracteristicas_generales_renamed (),
-      primary_keys = primary_keys ) )
+    interpret_columns_universal_2021 (
+      deduplicate_rows (
+        raw_caracteristicas_generales_renamed (),
+        primary_keys = primary_keys ) ) )
   otros = interpret_columns_otros_ingresos (
-    deduplicate_rows (
-      raw_otros_ingresos_renamed (),
-      primary_keys = primary_keys ) )
+    interpret_columns_universal_2021 (
+      deduplicate_rows (
+        raw_otros_ingresos_renamed (),
+        primary_keys = primary_keys ) ) )
   ocup = mk_pension_contribs ( # This extra step is not present
                                # in the other two tables.
     interpret_columns_ocupados (
-      deduplicate_rows (
-        raw_ocupados_renamed (),
-        primary_keys = primary_keys ) ) )
+      interpret_columns_universal_2021 (
+        deduplicate_rows (
+          raw_ocupados_renamed (),
+          primary_keys = primary_keys ) ) ) )
 
   m = pd.merge (
     otros.drop ( columns = ["weight"] ),
