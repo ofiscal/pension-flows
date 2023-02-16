@@ -16,3 +16,18 @@ if True: # Add 2022-specific variables to `dicts_to_rename_columns`.
   dicts_to_rename_columns["universal"] = {
     **dicts_to_rename_columns["universal"],
     "FEX_C18"    : "weight" }
+
+def fetch_one ( filename : str,
+                nickname : str,
+                how_to_rename_columns : Dict [str, str]
+               ) -> pd.DataFrame:
+  df = (
+    pd.read_csv (
+      join ( "data/geih/2022-11",
+             filename + ".csv" ),
+      usecols = how_to_rename_columns.keys(),
+      encoding = "latin",
+      sep = ";" )
+    . rename ( columns = how_to_rename_columns ) )
+  df [ "source file" ] = nickname
+  return df
