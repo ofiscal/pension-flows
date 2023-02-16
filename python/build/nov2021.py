@@ -19,14 +19,13 @@ if True: # Add 2021-specific variables to `dicts_to_rename_columns`.
 
 def fetch_one ( filename : str,
                 nickname : str,
-                columns_of_interest : List [str],
                 how_to_rename_columns : Dict [str, str]
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
       join ( "data/geih/2021-11",
              filename ),
-      usecols = columns_of_interest,
+      usecols = how_to_rename_columns.keys(),
       sep = ";" )
     . rename ( columns = how_to_rename_columns ) )
   df [ "source file" ] = nickname
@@ -36,14 +35,13 @@ def fetchSmilarData_renameColumns_and_join (
     filename_tail : str,
     how_to_rename_columns : Dict[str,str]
     ) -> pd.DataFrame:
-  (tail,orig,r) = (
+  (tail,r) = (
     filename_tail,
-    list ( how_to_rename_columns.keys() ), # original names
     how_to_rename_columns )
   return pd.concat (
-    [ fetch_one ( "area"     + tail, "area"    , orig, r ),
-      fetch_one ( "Cabecera" + tail, "cabecera", orig, r ),
-      fetch_one ( "Resto"    + tail, "resto"   , orig, r ) ] )
+    [ fetch_one ( "area"     + tail, "area"    , r ),
+      fetch_one ( "Cabecera" + tail, "cabecera", r ),
+      fetch_one ( "Resto"    + tail, "resto"   , r ) ] )
 
 def raw_ocupados_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
