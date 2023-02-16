@@ -23,7 +23,17 @@ df["to private"] = ( df["employee contribs"] +
                      df["employer contribs"] -
                      df["to public"] )
 
+all_money     = ( ( df["to public"] +
+                    df["to private"] )
+                  * df["weight"] ) . sum()
+public_money  = ( df["to public"]  * df["weight"] ) . sum()
+private_money = ( df["to private"] * df["weight"] ) . sum()
+
 print( "Total billones de COP per month to public system: ",
-       ( df["to public"] * df["weight"] ) . sum() / 1e12 )
+        public_money / 1e12 )
+print( "Share going to public system: ",
+        public_money / all_money )
 print( "Total billones de COP per month to private system: ",
-       ( df["to private"] * df["weight"] ) . sum() / 1e12 )
+        private_money / 1e12 )
+print( "Share going to private system: ",
+        private_money / all_money )
