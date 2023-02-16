@@ -29,3 +29,25 @@ def fetch_one ( filename : str,
       sep = ";" )
     . rename ( columns = how_to_rename_columns ) )
   return df
+
+def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
+  return fetch_one (
+    filename = \
+      "Caracteristicas generales, seguridad social en salud y educacion",
+    how_to_rename_columns = {
+      ** dicts_to_rename_columns["universal"],
+      ** dicts_to_rename_columns["caracteristicas_personales"] } )
+
+def raw_ocupados_renamed () -> pd.DataFrame:
+  return fetch_one (
+    filename = "Ocupados",
+    how_to_rename_columns = {
+      ** dicts_to_rename_columns["universal"],
+      ** dicts_to_rename_columns["ocupados"] } )
+
+def raw_otros_ingresos_renamed () -> pd.DataFrame:
+  return fetch_one (
+    filename = "Otros ingresos e impuestos",
+    how_to_rename_columns = {
+      ** dicts_to_rename_columns["universal"],
+      ** dicts_to_rename_columns["otros_ingresos"] } )
