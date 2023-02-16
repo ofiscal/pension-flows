@@ -3,6 +3,23 @@
 These are what I changed the file names to,
 so that my console can display them:
 
+## 2022
+
+```
+Caracteristicas generales, seguridad social en salud y educacion.csv
+Datos del hogar y la vivienda.csv
+ ddi-documentation-spanish-771.pdf
+Fuerza de trabajo.csv
+ Migracion.csv
+No ocupados.csv
+ Ocupados.csv
+Otras formas de trabajo.csv
+Otros ingresos e impuestos.csv
+Tipo de investigacion.csv
+```
+
+## 2021
+
 ```
 Cabecera_Otros-ingresos.csv
 Resto_Caracteristicas-generales_Personas.csv

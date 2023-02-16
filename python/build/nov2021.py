@@ -5,34 +5,17 @@ import pandas as pd
 
 from python.ss_functions import ( mk_pension,
                                   mk_pension_employer, )
+from python.build.common import ( primary_keys,
+                                  dicts_to_rename_columns )
 
 
-primary_keys = ["DIR","SEC","ORD"]
-
-dicts_to_rename_columns : \
-  Dict [ str, Dict [ str, str ] ] = \
-    { "universal" : { "fex_c_2011"  : "weight",
-                      "DIRECTORIO"  : "DIR",
-                      "SECUENCIA_P" : "SEC",
-                      "ORDEN"       : "ORD" },
-
-      # PITFALL: The RHS of most of the string-string pairs below
-      # are LIES, to begin with.
-      # Only once the data is processed by some interpret_columns_ function
-      # are those column names accurate.
-
-      "caracteristicas_personales" : { "P6020" : "female",
-                                       "P6040" : "age" },
-
-      "ocupados" : {
-        "INGLABO" : "labor income",
-        "P6920"   : "formal", # <=> contributes to a pension
-        "P1879"   : "indep" # <=> gave a reason for working indep
-      },
-
-      "otros_ingresos" : { "P7500S2A1" : "pension income",
-                           "P7500S1A1" : "rental income", },
-     }
+if True: # Add 2021-specific variables to `dicts_to_rename_columns`.
+  dicts_to_rename_columns["caracteristicas_personales"] = {
+    **dicts_to_rename_columns["caracteristicas_personales"],
+    "P6020" : "female" }
+  dicts_to_rename_columns["universal"] = {
+    **dicts_to_rename_columns["universal"],
+    "fex_c_2011" : "weight" }
 
 def fetch_one ( filename : str,
                 nickname : str,
