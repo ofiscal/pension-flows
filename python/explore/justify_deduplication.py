@@ -1,6 +1,6 @@
 # PURPOSE:
 # This is not used by main.py.
-# It justifies the deduplication performed in get_data.py
+# It justifies the deduplication performed in python.build.nov2021
 
 # USAGE:
 # Just run the whole program and read the output.
@@ -12,7 +12,7 @@
 from typing import List, Dict, Tuple
 import pandas as pd
 
-from python.get_data import (
+from python.build.nov2021 import (
   dicts_to_rename_columns,
   interpret_columns_caracteristicas_personales,
   interpret_columns_ocupados,

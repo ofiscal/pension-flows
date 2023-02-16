@@ -2,7 +2,7 @@
 # Show that HOGAR is redundant, everywhere equal to SECUENCIA_P.
 
 # USAGE | PITFALL:
-# This requires modifying get_data.py,
+# This requires modifying python.build.nov2021
 # by inserting the line
 #   "HOGAR" : "HOG",
 # into the definition of `dicts_to_rename_columns["universal"]`.
