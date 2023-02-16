@@ -18,7 +18,6 @@ if True: # Add 2022-specific variables to `dicts_to_rename_columns`.
     "FEX_C18"    : "weight" }
 
 def fetch_one ( filename : str,
-                nickname : str,
                 how_to_rename_columns : Dict [str, str]
                ) -> pd.DataFrame:
   df = (
@@ -29,5 +28,4 @@ def fetch_one ( filename : str,
       encoding = "latin",
       sep = ";" )
     . rename ( columns = how_to_rename_columns ) )
-  df [ "source file" ] = nickname
   return df
