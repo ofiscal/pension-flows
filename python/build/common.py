@@ -35,6 +35,14 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
 
   "otros_ingresos" : { "P7500S2A1" : "pension income",
                        "P7500S1A1" : "rental income", },
+
+  "hogar" : { "P5130" : "implicit homeowner income" },
+    # PITFALL: This includes values 98 and 99, which are error codes
+    # ("doesn't know" and "won't say", maybe not in that order).
+    # However, since we are only interested in whether this is > 0,
+    # those values should not be set to 0 -- or if they are,
+    # a new columnn should be created to preserve the information
+    # that the household does not pay rent.
 }
 
 def interpret_columns_caracteristicas_personales (

@@ -12,11 +12,18 @@ from python.build.common import (
 
 
 if True: # Add 2021-specific variables to `dicts_to_rename_columns`.
-  dicts_to_rename_columns["caracteristicas_personales"] = {
-    **dicts_to_rename_columns["caracteristicas_personales"],
+  dicts_to_rename_columns_2021 = dicts_to_rename_columns . copy()
+    # PITFALL: This copy is necessary despite appearances,
+    # because this module and at least one other
+    # both define their own `dicts_to_rename_columns` value.
+    # Unless I explicitly copy the dictionary before modifying it,
+    # then whichever module was imported most recently
+    # will overwrite the value of the other one!
+  dicts_to_rename_columns_2021["caracteristicas_personales"] = {
+    **dicts_to_rename_columns_2021["caracteristicas_personales"],
     "P6020" : "female" }
-  dicts_to_rename_columns["universal"] = {
-    **dicts_to_rename_columns["universal"],
+  dicts_to_rename_columns_2021["universal"] = {
+    **dicts_to_rename_columns_2021["universal"],
     "fex_c_2011" : "weight" }
 
 def fetch_one ( filename : str,
@@ -49,22 +56,22 @@ def raw_ocupados_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Ocupados.csv",
     how_to_rename_columns = {
-      **dicts_to_rename_columns["universal"],
-      **dicts_to_rename_columns["ocupados"] } )
+      **dicts_to_rename_columns_2021["universal"],
+      **dicts_to_rename_columns_2021["ocupados"] } )
 
 def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Caracteristicas-generales_Personas.csv",
     how_to_rename_columns = {
-      **dicts_to_rename_columns["universal"],
-      **dicts_to_rename_columns["caracteristicas_personales"] } )
+      **dicts_to_rename_columns_2021["universal"],
+      **dicts_to_rename_columns_2021["caracteristicas_personales"] } )
 
 def raw_otros_ingresos_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
     filename_tail = "_Otros-ingresos.csv",
     how_to_rename_columns = {
-      **dicts_to_rename_columns["universal"],
-      **dicts_to_rename_columns["otros_ingresos"] } )
+      **dicts_to_rename_columns_2021["universal"],
+      **dicts_to_rename_columns_2021["otros_ingresos"] } )
 
 def interpret_columns_universal_2021 (
     # Make a column numeric.
@@ -95,6 +102,7 @@ def mkData () -> pd.DataFrame:
       deduplicate_rows (
         raw_caracteristicas_generales_renamed (),
         primary_keys = primary_keys ) ) )
+
   otros = interpret_columns_otros_ingresos (
     interpret_columns_universal_2021 (
       deduplicate_rows (
