@@ -15,3 +15,6 @@ class BasicIncome:
   when_subsidy_starts_to_wane : float # minimum wages per month
   when_subsidy_disappears     : float # minimum wages per month.
     # Should be bigger than `when_subsidy_starts_to_wane`.
+  pensioners_included               : bool
+  homeowners_included               : bool
+  homeowners_implicit_income_counts : bool # Whether implicit homeowners income is included in total income when computing the subsidy amount.
