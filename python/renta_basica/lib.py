@@ -1,13 +1,12 @@
 # DEFINES:
 #
-# def near_nonzero (a : float, b : float) -> bool:
+#     def near_nonzero (a : float, b : float) -> bool:
 #
-# def negative_dSubsidy_dIncome ( bi : BasicIncome ) -> float:
+#     def negative_dSubsidy_dIncome ( bi : BasicIncome ) -> float:
 #
-# def subsidy ( income : float ) -> float:
+#     def subsidy ( income : float ) -> float:
 #
-# and tests for all functions.
-
+# and tests for all of them..
 
 import matplotlib.pyplot as plt
 import pandas as pd

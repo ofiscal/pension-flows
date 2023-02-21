@@ -48,6 +48,11 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
     # that the household does not pay rent.
 }
 
+
+##############################
+#### Interpreting columns ####
+##############################
+
 def interpret_columns_generales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
@@ -74,6 +79,11 @@ def interpret_columns_hogares ( df : pd.DataFrame
     . astype( int ) )
   return df
 
+
+#############################
+#### Hnadling duplicates ####
+#############################
+
 def deduplicate_rows (
     df : pd.DataFrame,
     primary_keys = List[str], # PITFALL: Argument needed for testing.
@@ -95,6 +105,11 @@ def test_deduplicate_rows ():
       pd.DataFrame ( { "id" : pd.Series( [1 ,  2] ),
                        "a"  : pd.Series( [11, 12], dtype = float),
                        "b"  : pd.Series( [21, 22], dtype = float), } ) ) )
+
+
+####################################
+#### Income and similar columns ####
+####################################
 
 def mk_pension_contribs ( df : pd.DataFrame
                          ) -> pd.DataFrame:
