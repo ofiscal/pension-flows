@@ -7,6 +7,8 @@ from python.ss_functions import ( mk_pension,
                                   mk_pension_employer, )
 
 
+year_month = "data/geih/2022-11"
+
 # PITFALL: There is no "ORDEN" (ORD) in the file
 # `Datos del hogar y la vivienda.csv` for 2022.
 primary_keys : List[str] = \

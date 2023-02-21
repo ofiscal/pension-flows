@@ -3,7 +3,7 @@ from typing import List, Dict, Tuple, Any
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from python.build.nov2021 import mkData
+from python.build.nov2022 import mkData
 from python.renta_basica.lib import subsidy
 import python.renta_basica.lib as rb
 from python.cdfs.lib import draw_cdf_of_money

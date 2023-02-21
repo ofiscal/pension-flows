@@ -6,6 +6,7 @@ import pandas as pd
 from python.ss_functions import ( mk_pension,
                                   mk_pension_employer, )
 from python.build.common import (
+  year_month,
   primary_keys,
   dicts_to_rename_columns,
   interpret_columns_generales,
@@ -36,7 +37,7 @@ def fetch_one ( filename : str,
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
-      join ( "data/geih/2022-11",
+      join ( year_month,
              filename + ".csv" ),
       usecols = how_to_rename_columns.keys(),
       encoding = "latin",
