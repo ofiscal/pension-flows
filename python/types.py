@@ -1,5 +1,6 @@
-from typing import Tuple, List, Dict, Callable
-from dataclasses import dataclass
+from   dataclasses import dataclass
+import pandas as pd
+from   typing import Tuple, List, Dict, Callable
 
 
 Schedule = Tuple [
@@ -18,3 +19,14 @@ class BasicIncome:
   pensioners_included               : bool
   homeowners_included               : bool
   homeowners_implicit_income_counts : bool # Whether implicit homeowners income is included in total income when computing the subsidy amount.
+
+def BasicIncome_toDict ( bi : BasicIncome
+                        ) -> pd.Series:
+  return pd.Series ( {
+    "subsidy_if_broke"                  : bi.subsidy_if_broke,
+    "when_subsidy_starts_to_wane"       : bi.when_subsidy_starts_to_wane,
+    "when_subsidy_disappears"           : bi.when_subsidy_disappears,
+    "pensioners_included"               : bi.pensioners_included,
+    "homeowners_included"               : bi.homeowners_included,
+    "homeowners_implicit_income_counts" : bi.homeowners_implicit_income_counts,
+  } )

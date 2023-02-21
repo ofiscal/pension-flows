@@ -1,12 +1,13 @@
-from os.path import join
-from typing import List, Dict, Tuple, Any
-import pandas as pd
+from   datetime import datetime
 import matplotlib.pyplot as plt
+from   os.path import join
+import pandas as pd
+from   typing import List, Dict, Tuple, Any
 
 from   python.build.nov2022  import mkData
 from   python.cdfs.lib       import draw_cdf_of_money
 import python.renta_basica.lib as rb
-from   python.types          import BasicIncome
+from   python.types          import BasicIncome, BasicIncome_toDict
 
 
 df = mkData()
@@ -16,47 +17,47 @@ df = mkData()
 # === Computing the cost of the renta básica ===
 # ==============================================
 
-bi_500_0_1 = BasicIncome ( subsidy_if_broke = 1/2,
-                           when_subsidy_starts_to_wane = 0,
-                           when_subsidy_disappears = 1 )
-bi_500_1_2 = BasicIncome ( subsidy_if_broke = 1/2,
-                           when_subsidy_starts_to_wane = 1 ,
-                           when_subsidy_disappears = 2 )
-bi_500_1_3 = BasicIncome ( subsidy_if_broke = 1/2,
-                           when_subsidy_starts_to_wane = 1,
-                           when_subsidy_disappears = 3 )
-bi_500_2_4 = BasicIncome ( subsidy_if_broke = 1/2,
-                           when_subsidy_starts_to_wane = 2,
-                           when_subsidy_disappears = 4 )
+def describeBasicIncome ( bi  : BasicIncome,
+                          df0 : pd.DataFrame,
+                         ) -> pd.Series:
+  df = df0.copy()
+  acc = dict() # accumulates return values
 
-name_subsidy_pairs : List[ Tuple[ str,
-                                  BasicIncome ] ] = \
-  [("yearly subsidy 500 0 1", bi_500_0_1),
-   ("yearly subsidy 500 1 2", bi_500_1_2),
-   ("yearly subsidy 500 1 3", bi_500_1_3),
-   ("yearly subsidy 500 2 4", bi_500_2_4)]
+  df["subsidy"] = df.apply (
+    lambda row: rb.subsidy ( bi, row ),
+    axis = "columns" )
+  df = df[ df["subsidy"] > 0 ]
 
-for name, bi in name_subsidy_pairs:
-  df[name] = df.apply (
-      lambda row: ( 12 * # yearly
-                    rb.subsidy ( bi, row["total-ish income" ] ) ),
-      axis = "columns" )
+  acc["people (millions)"] = ( df["weight"] . sum()
+                               / 1e6 ) # put it in millions
+  acc["cost (billones COP)"] = ( ( ( df["subsidy"] * df["weight"] )
+                                   . sum() )
+                                 / 1e12 )
+  return pd.Series ( { **BasicIncome_toDict(bi),
+                       **acc, } )
 
-old = df[ df["age"] >= 65 ]
-old_no_pension = old[ old["pension income"] < rb.real_pension_threshold ]
+acc : List[pd.Series] = []
+start_time = datetime.now()
+for subsidy_if_broke in [2e5, 3.5e5, 5e5]:
+  for when_subsidy_starts_to_wane in [0,1,2]:
+    x = when_subsidy_starts_to_wane
+    for when_subsidy_disappears in [x+1, x+2]:
+      for pensioners_included in [0,1]:
+        for homeowners_included in [0,1]:
+          for homeowners_implicit_income_counts in [0,1]:
+            bi = BasicIncome (
+              subsidy_if_broke            = subsidy_if_broke,
+              when_subsidy_starts_to_wane = when_subsidy_starts_to_wane,
+              when_subsidy_disappears     = when_subsidy_disappears,
+              pensioners_included         = pensioners_included,
+              homeowners_included         = homeowners_included,
+              homeowners_implicit_income_counts = \
+                homeowners_implicit_income_counts, )
+            acc.append(
+              describeBasicIncome( bi = bi,
+                                   df0 = df ) )
+print( datetime.now() - start_time )
 
-def describe_subsidies ( orig : pd.DataFrame
-                        ): # pure IO (prints to screen)
-  df = orig.copy()
-  for name, _ in name_subsidy_pairs:
-    # PITFALL: This feels like a hack.
-    df[name] = df[name] * df["weight"]
-  print ( "People (millions): ", str ( df["weight"] . sum()
-                                       / 1e6 ) ) # put it in millions
-  print ( "Total cost of each scheme (billones españoles):" )
-  print( ( df [ [ name for (name,_) in name_subsidy_pairs ] ]
-            / 1e12 ) # put it in billones españoles
-         . sum () )
+res = pd.DataFrame( acc )
 
-describe_subsidies(old)
-describe_subsidies(old_no_pension)
+res.to_excel( "basic_income_scenarios.xlsx" )
