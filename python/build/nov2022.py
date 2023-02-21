@@ -10,6 +10,7 @@ from python.build.common import (
   dicts_to_rename_columns,
   interpret_columns_generales,
   interpret_columns_ocupados,
+  interpret_columns_hogares,
   deduplicate_rows,
   mk_pension_contribs )
 
@@ -88,10 +89,11 @@ def mkData () -> pd.DataFrame:
       deduplicate_rows (
         raw_ocupados_renamed (),
         primary_keys = primary_keys ) ) )
-  hogar = deduplicate_rows (
-    # Unnecessary, but easier than maintaining a proof that it's unnecessary.
-    raw_hogar_renamed (),
-    ["DIR","SEC"] ) # Because "hogar" has no "ORDEN" column.
+  hogar = interpret_columns_hogares (
+    deduplicate_rows (
+      # Unnecessary, but easier than maintaining a proof that it's unnecessary
+      raw_hogar_renamed (),
+      ["DIR","SEC"] ) ) # Because "hogar" has no "ORDEN" column.
 
   m = pd.merge (
     otros.drop ( columns = ["weight"] ),

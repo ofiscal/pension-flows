@@ -36,7 +36,8 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
   "otros_ingresos" : { "P7500S2A1" : "pension income",
                        "P7500S1A1" : "rental income", },
 
-  "hogar" : { "P5130" : "implicit homeowner income" },
+  "hogar" : { "P5130" : "implicit homeowner income",
+              "P5090" : "homeowner", },
     # PITFALL: This includes values 98 and 99, which are error codes
     # ("doesn't know" and "won't say", maybe not in that order).
     # However, since we are only interested in whether this is > 0,
@@ -61,6 +62,13 @@ def interpret_columns_ocupados ( df : pd.DataFrame
           . isnull() ) )
     . astype("int") )
   df [ "in ocupados" ] = 1
+  return df
+
+def interpret_columns_hogares ( df : pd.DataFrame
+                               ) -> pd.DataFrame:
+  df["homeowner"] = ( df["homeowner"]
+                      # 1 = owns hogar outright. 2 = paying down mortgage.
+                      . isin ( [1,2] ) )
   return df
 
 def deduplicate_rows (
