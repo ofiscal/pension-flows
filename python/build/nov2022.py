@@ -5,20 +5,11 @@ import pandas as pd
 
 from python.ss_functions import ( mk_pension,
                                   mk_pension_employer, )
-from python.build.common import (
-  year_month,
-  primary_keys,
-  dicts_to_rename_columns,
-  interpret_columns_generales,
-  interpret_columns_ocupados,
-  interpret_columns_hogares,
-  deduplicate_rows,
-  mk_total_income,
-  mk_pension_contribs )
+import python.build.common as bc
 
 
-if True: # Add 2022-specific variables to `dicts_to_rename_columns`.
-  dicts_to_rename_columns_2022 = dicts_to_rename_columns . copy()
+if True: # Add 2022-specific variables to `bc.dicts_to_rename_columns`.
+  dicts_to_rename_columns_2022 = bc.dicts_to_rename_columns . copy()
     # PITFALL: This copy is necessary despite appearances,
     # because this module and at least one other
     # both define their own `dicts_to_rename_columns` value.
@@ -37,7 +28,7 @@ def fetch_one ( filename : str,
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
-      join ( year_month,
+      join ( bc.year_month,
              filename + ".csv" ),
       usecols = how_to_rename_columns.keys(),
       encoding = "latin",
@@ -78,21 +69,21 @@ def raw_otros_ingresos_renamed () -> pd.DataFrame:
       ** dicts_to_rename_columns_2022["otros_ingresos"] } )
 
 def mkData () -> pd.DataFrame:
-  cg = interpret_columns_generales (
-    deduplicate_rows (
+  cg = bc.interpret_columns_generales (
+    bc.deduplicate_rows (
       raw_generales_renamed (),
-      primary_keys = primary_keys ) )
-  otros = deduplicate_rows ( # No interpretation needed.
+      primary_keys = bc.primary_keys ) )
+  otros = bc.deduplicate_rows ( # No interpretation needed.
     raw_otros_ingresos_renamed (),
-    primary_keys = primary_keys )
-  ocup = mk_pension_contribs ( # This extra step is not present
-                               # in the other two tables.
-    interpret_columns_ocupados (
-      deduplicate_rows (
+    primary_keys = bc.primary_keys )
+  ocup = bc.mk_pension_contribs ( # This extra step is not present
+                                  # in the other two tables.
+    bc.interpret_columns_ocupados (
+      bc.deduplicate_rows (
         raw_ocupados_renamed (),
-        primary_keys = primary_keys ) ) )
-  hogar = interpret_columns_hogares (
-    deduplicate_rows (
+        primary_keys = bc.primary_keys ) ) )
+  hogar = bc.interpret_columns_hogares (
+    bc.deduplicate_rows (
       # Unnecessary, but easier than maintaining a proof that it's unnecessary
       raw_hogar_renamed (),
       ["DIR","SEC"] ) ) # Because "hogar" has no "ORDEN" column.
@@ -107,9 +98,9 @@ def mkData () -> pd.DataFrame:
         ),
       ocup.drop ( columns = ["weight"] ),
       how = "outer",
-      on = primary_keys ),
+      on = bc.primary_keys ),
     how = "outer",
-    on = primary_keys )
+    on = bc.primary_keys )
 
   m["in ocupados"] = m["in ocupados"] . fillna(0)
 
@@ -120,4 +111,4 @@ def mkData () -> pd.DataFrame:
             "employer contribs",]:
     m[c] = m[c].fillna(0)
 
-  return mk_total_income( m )
+  return bc.mk_total_income( m )

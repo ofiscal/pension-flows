@@ -12,15 +12,7 @@
 from typing import List, Dict, Tuple
 import pandas as pd
 
-from python.build.nov2021 import (
-  dicts_to_rename_columns,
-  interpret_columns_generales,
-  interpret_columns_ocupados,
-  interpret_columns_otros_ingresos,
-  raw_generales_renamed,
-  raw_ocupados_renamed,
-  raw_otros_ingresos_renamed,
-  )
+import python.build.nov2021 as bn21
 
 
 # Verify there are no duplicates within a given source file,
@@ -71,25 +63,25 @@ def analyze_duplicates ( df : pd.DataFrame,
 
   print ( x . describe() . transpose() )
 
-ocup = interpret_columns_ocupados (
-  raw_ocupados_renamed () )
+ocup = bn21.interpret_columns_ocupados (
+  bn21.raw_ocupados_renamed () )
 
-cg = interpret_columns_generales (
-  raw_generales_renamed () )
+cg = bn21.interpret_columns_generales (
+  bn21.raw_generales_renamed () )
 
-otros = interpret_columns_otros_ingresos (
-  raw_otros_ingresos_renamed () )
+otros = bn21.interpret_columns_otros_ingresos (
+  bn21.raw_otros_ingresos_renamed () )
 
 
 for (df, nickname, columns_to_analyze) in [
   ( otros, "otros_ingresos",
-    list ( dicts_to_rename_columns ["otros_ingresos"]
+    list ( bn21.dicts_to_rename_columns ["otros_ingresos"]
            . values() ) ),
   ( ocup, "ocupados",
-    list ( dicts_to_rename_columns ["ocupados"]
+    list ( bn21.dicts_to_rename_columns ["ocupados"]
            . values() ) ),
   ( cg, "generales",
-    list ( dicts_to_rename_columns ["generales"]
+    list ( bn21.dicts_to_rename_columns ["generales"]
           . values() ) ),
     ]:
   print()

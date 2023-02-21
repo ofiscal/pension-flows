@@ -2,17 +2,11 @@ from typing import List, Dict, Tuple
 from os.path import join
 import pandas as pd
 
-from python.build.common import (
-  primary_keys,
-  dicts_to_rename_columns,
-  interpret_columns_generales,
-  interpret_columns_ocupados,
-  deduplicate_rows,
-  mk_pension_contribs )
+import python.build.common as bc
 
 
-if True: # Add 2021-specific variables to `dicts_to_rename_columns`.
-  dicts_to_rename_columns_2021 = dicts_to_rename_columns . copy()
+if True: # Add 2021-specific variables to `bc.dicts_to_rename_columns`.
+  dicts_to_rename_columns_2021 = bc.dicts_to_rename_columns . copy()
     # PITFALL: This copy is necessary despite appearances,
     # because this module and at least one other
     # both define their own `dicts_to_rename_columns` value.
@@ -97,24 +91,24 @@ def interpret_columns_otros_ingresos ( df : pd.DataFrame
   return df
 
 def mkData () -> pd.DataFrame:
-  cg = interpret_columns_generales (
+  cg = bc.interpret_columns_generales (
     interpret_columns_universal_2021 (
-      deduplicate_rows (
+      bc.deduplicate_rows (
         raw_generales_renamed (),
-        primary_keys = primary_keys ) ) )
+        primary_keys = bc.primary_keys ) ) )
 
   otros = interpret_columns_otros_ingresos (
     interpret_columns_universal_2021 (
-      deduplicate_rows (
+      bc.deduplicate_rows (
         raw_otros_ingresos_renamed (),
-        primary_keys = primary_keys ) ) )
-  ocup = mk_pension_contribs ( # This extra step is not present
-                               # in the other two tables.
-    interpret_columns_ocupados (
+        primary_keys = bc.primary_keys ) ) )
+  ocup = bc.mk_pension_contribs ( # This extra step is not present
+                                  # in the other two tables.
+    bc.interpret_columns_ocupados (
       interpret_columns_universal_2021 (
-        deduplicate_rows (
+        bc.deduplicate_rows (
           raw_ocupados_renamed (),
-          primary_keys = primary_keys ) ) ) )
+          primary_keys = bc.primary_keys ) ) ) )
 
   m = pd.merge (
     otros.drop ( columns = ["weight"] ),
@@ -122,9 +116,9 @@ def mkData () -> pd.DataFrame:
       cg,
       ocup.drop ( columns = ["weight"] ),
       how = "outer",
-      on = primary_keys ),
+      on = bc.primary_keys ),
     how = "outer",
-    on = primary_keys )
+    on = bc.primary_keys )
   m["in ocupados"] = m["in ocupados"] . fillna(0)
   m["source file"] = ( # Reduce the three "source file" fields to one.
                        # See https://stackoverflow.com/a/41449714/916142
