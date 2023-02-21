@@ -8,9 +8,9 @@
 # into the definition of `dicts_to_rename_columns["universal"]`.
 # This makes the (redundant) HOGAR variable available.
 
-cg = interpret_columns_caracteristicas_personales (
+cg = interpret_columns_generales (
   deduplicate_rows (
-    raw_caracteristicas_generales_renamed () ) )
+    raw_generales_renamed () ) )
 otros = interpret_columns_otros_ingresos (
   deduplicate_rows (
     raw_otros_ingresos_renamed () ) )

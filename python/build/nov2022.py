@@ -8,7 +8,7 @@ from python.ss_functions import ( mk_pension,
 from python.build.common import (
   primary_keys,
   dicts_to_rename_columns,
-  interpret_columns_caracteristicas_personales,
+  interpret_columns_generales,
   interpret_columns_ocupados,
   deduplicate_rows,
   mk_pension_contribs )
@@ -22,8 +22,8 @@ if True: # Add 2022-specific variables to `dicts_to_rename_columns`.
     # Unless I explicitly copy the dictionary before modifying it,
     # then whichever module was imported most recently
     # will overwrite the value of the other one!
-  dicts_to_rename_columns_2022["caracteristicas_personales"] = {
-    **dicts_to_rename_columns_2022["caracteristicas_personales"],
+  dicts_to_rename_columns_2022["generales"] = {
+    **dicts_to_rename_columns_2022["generales"],
     "P3271"      : "female" } # 2022. Init vals: 1=hombre, 2=mujer
   dicts_to_rename_columns_2022["universal"] = {
     **dicts_to_rename_columns_2022["universal"],
@@ -49,35 +49,35 @@ def raw_hogar_renamed () -> pd.DataFrame:
   del( how_to_rename_columns["ORDEN"] )
     # Uniquely, the "hogar" file has no such column.
   return fetch_one (
-    filename = "Datos del hogar y la vivienda",
+    filename = "hogar",
     how_to_rename_columns = how_to_rename_columns )
 
-def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
+def raw_generales_renamed () -> pd.DataFrame:
   return fetch_one (
     filename = \
-      "Caracteristicas generales, seguridad social en salud y educacion",
+      "generales",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
-      ** dicts_to_rename_columns_2022["caracteristicas_personales"] } )
+      ** dicts_to_rename_columns_2022["generales"] } )
 
 def raw_ocupados_renamed () -> pd.DataFrame:
   return fetch_one (
-    filename = "Ocupados",
+    filename = "ocupados",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
       ** dicts_to_rename_columns_2022["ocupados"] } )
 
 def raw_otros_ingresos_renamed () -> pd.DataFrame:
   return fetch_one (
-    filename = "Otros ingresos e impuestos",
+    filename = "ingresos-e-impuestos-otros",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
       ** dicts_to_rename_columns_2022["otros_ingresos"] } )
 
 def mkData () -> pd.DataFrame:
-  cg = interpret_columns_caracteristicas_personales (
+  cg = interpret_columns_generales (
     deduplicate_rows (
-      raw_caracteristicas_generales_renamed (),
+      raw_generales_renamed (),
       primary_keys = primary_keys ) )
   otros = deduplicate_rows ( # No interpretation needed.
     raw_otros_ingresos_renamed (),

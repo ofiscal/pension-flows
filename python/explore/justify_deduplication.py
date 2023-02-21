@@ -14,10 +14,10 @@ import pandas as pd
 
 from python.build.nov2021 import (
   dicts_to_rename_columns,
-  interpret_columns_caracteristicas_personales,
+  interpret_columns_generales,
   interpret_columns_ocupados,
   interpret_columns_otros_ingresos,
-  raw_caracteristicas_generales_renamed,
+  raw_generales_renamed,
   raw_ocupados_renamed,
   raw_otros_ingresos_renamed,
   )
@@ -74,8 +74,8 @@ def analyze_duplicates ( df : pd.DataFrame,
 ocup = interpret_columns_ocupados (
   raw_ocupados_renamed () )
 
-cg = interpret_columns_caracteristicas_personales (
-  raw_caracteristicas_generales_renamed () )
+cg = interpret_columns_generales (
+  raw_generales_renamed () )
 
 otros = interpret_columns_otros_ingresos (
   raw_otros_ingresos_renamed () )
@@ -88,8 +88,8 @@ for (df, nickname, columns_to_analyze) in [
   ( ocup, "ocupados",
     list ( dicts_to_rename_columns ["ocupados"]
            . values() ) ),
-  ( cg, "caracteristicas_personales",
-    list ( dicts_to_rename_columns ["caracteristicas_personales"]
+  ( cg, "generales",
+    list ( dicts_to_rename_columns ["generales"]
           . values() ) ),
     ]:
   print()

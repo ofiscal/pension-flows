@@ -5,7 +5,7 @@ import pandas as pd
 from python.build.common import (
   primary_keys,
   dicts_to_rename_columns,
-  interpret_columns_caracteristicas_personales,
+  interpret_columns_generales,
   interpret_columns_ocupados,
   deduplicate_rows,
   mk_pension_contribs )
@@ -19,8 +19,8 @@ if True: # Add 2021-specific variables to `dicts_to_rename_columns`.
     # Unless I explicitly copy the dictionary before modifying it,
     # then whichever module was imported most recently
     # will overwrite the value of the other one!
-  dicts_to_rename_columns_2021["caracteristicas_personales"] = {
-    **dicts_to_rename_columns_2021["caracteristicas_personales"],
+  dicts_to_rename_columns_2021["generales"] = {
+    **dicts_to_rename_columns_2021["generales"],
     "P6020" : "female" }
   dicts_to_rename_columns_2021["universal"] = {
     **dicts_to_rename_columns_2021["universal"],
@@ -54,17 +54,17 @@ def fetchSmilarData_renameColumns_and_join (
 
 def raw_ocupados_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
-    filename_tail = "_Ocupados.csv",
+    filename_tail = "_ocupados.csv",
     how_to_rename_columns = {
       **dicts_to_rename_columns_2021["universal"],
       **dicts_to_rename_columns_2021["ocupados"] } )
 
-def raw_caracteristicas_generales_renamed () -> pd.DataFrame:
+def raw_generales_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
-    filename_tail = "_Caracteristicas-generales_Personas.csv",
+    filename_tail = "generales.csv",
     how_to_rename_columns = {
       **dicts_to_rename_columns_2021["universal"],
-      **dicts_to_rename_columns_2021["caracteristicas_personales"] } )
+      **dicts_to_rename_columns_2021["generales"] } )
 
 def raw_otros_ingresos_renamed () -> pd.DataFrame:
   return fetchSmilarData_renameColumns_and_join (
@@ -97,10 +97,10 @@ def interpret_columns_otros_ingresos ( df : pd.DataFrame
   return df
 
 def mkData () -> pd.DataFrame:
-  cg = interpret_columns_caracteristicas_personales (
+  cg = interpret_columns_generales (
     interpret_columns_universal_2021 (
       deduplicate_rows (
-        raw_caracteristicas_generales_renamed (),
+        raw_generales_renamed (),
         primary_keys = primary_keys ) ) )
 
   otros = interpret_columns_otros_ingresos (

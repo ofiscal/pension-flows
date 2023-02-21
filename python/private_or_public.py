@@ -4,12 +4,10 @@ from   os.path import join
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
-import python.build.nov2021 as nov2021
 import python.build.nov2022 as nov2022
 from python.common import min_wage
 
 
-df21 = nov2021.mkData()
 df22 = nov2022.mkData()
 
 def describe_data (
@@ -48,7 +46,7 @@ def describe_data (
   print()
 
 for (nickname,df) in [
-    ("November 2021", df21),
+    # ("November 2021", df21),
     ("November 2022", df22) ]:
   for threshold in [1,2]:
     describe_data ( nickname                 = nickname,

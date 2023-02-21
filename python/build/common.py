@@ -24,7 +24,7 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
   # Only once the data is processed by some interpret_columns_ function
   # are those column names accurate.
 
-  "caracteristicas_personales" : {
+  "generales" : {
     "P6040" : "age" },
 
   "ocupados" : {
@@ -45,7 +45,7 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
     # that the household does not pay rent.
 }
 
-def interpret_columns_caracteristicas_personales (
+def interpret_columns_generales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
   df["female"] = df ["female"] - 1
