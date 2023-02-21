@@ -12,24 +12,10 @@ from python.types import BasicIncome
 
 df = mkData()
 
-# =======================================================
-# === Deciding which pension income to consider real. ===
-# =======================================================
-
-# TODO: Move this section to another file.
-
-# Pensions are supposed to be around 1 minimum wage.
-# This CDF indicates that filtering anywhere between 1e5 and 7e5
-# has about the same effect, of only excluding a few unlikely answers.
-
-if True: # I already did it.
-  draw_cdf_of_money (
-    colname         = "pension income",
-    df              = df [ df["age"] >= 65 ],
-    ct              = {},
-    output_filename = "WUUUU" )
-
-# So I'll put it at 5e5 COP per month
+# Reported pension income below this threshold is assumed
+# not to be a true pension, since small pensions are illegal.
+# See python/renta_basica/choose_treshold.py
+# for how this was determined.
 real_pension_threshold = 5e5
 
 
