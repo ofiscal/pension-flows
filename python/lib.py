@@ -18,6 +18,22 @@ from typing import List, Dict, Any
 from python.build.nov2021 import mkData
 
 
+def near_nonzero (a : float, b : float) -> bool:
+  # TODO: This should be part of ofiscal_utils.
+  # tax.co has a similar, better function.
+  """Verifies that its two inputs are within 1% of each other."""
+  return ( False
+           if a < (0.99*b)
+           else ( False if b < (0.99*a)
+                  else True ) )
+
+def test_near_nonzero ():
+  assert near_nonzero(0.5,1) == False
+  assert near_nonzero(1,0.5) == False
+
+  assert near_nonzero(1,1.00001) == True
+  assert near_nonzero(1.00001,1) == True
+
 def drop_none_values_from_dict ( d : Dict[Any,Any]
                                 ) -> Dict[Any,Any]:
   # PITFALL: Keeps pairs for which k is None.

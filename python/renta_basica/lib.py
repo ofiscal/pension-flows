@@ -2,10 +2,7 @@
 #
 # def near_nonzero (a : float, b : float) -> bool:
 #
-# subsidy_if_broke            : float # COP per month
-# when_subsidy_starts_to_wane : float # COP per month
-# when_subsidy_disappears     : float # COP per month
-# negative_dSubsidy_dIncome : float
+# def negative_dSubsidy_dIncome ( bi : BasicIncome ) -> float:
 #
 # def subsidy ( income : float ) -> float:
 #
@@ -17,24 +14,28 @@ import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
 from python.common import min_wage
-from python.types import BasicIncome
+from python.lib    import near_nonzero
+from python.types  import BasicIncome
 
 
-def near_nonzero (a : float, b : float) -> bool:
-  # TODO: This should be part of ofiscal_utils.
-  # tax.co has a similar, better function.
-  """Verifies that its two inputs are within 1% of each other."""
-  return ( False
-           if a < (0.99*b)
-           else ( False if b < (0.99*a)
-                  else True ) )
+#################################################
+#### Disregarding misreported pension income ####
+#################################################
 
-def test_near_nonzero ():
-  assert near_nonzero(0.5,1) == False
-  assert near_nonzero(1,0.5) == False
+# Reported pension income below this threshold is assumed
+# not to be a true pension, since small pensions are illegal.
+# See python/renta_basica/choose_treshold.py
+# for how this was determined.
+real_pension_threshold = 5e5
 
-  assert near_nonzero(1,1.00001) == True
-  assert near_nonzero(1.00001,1) == True
+def has_pension ( pension_income = pd.Series
+                 ) -> pd.Series:
+  return pension_income >= real_pension_threshold
+
+
+####################################
+#### Computing the renta básica ####
+####################################
 
 def negative_dSubsidy_dIncome ( bi : BasicIncome ) -> float:
   # PITFALL:

@@ -9,7 +9,6 @@ Schedule = Tuple [
   Callable [ [float], float ], # computes taxable base from wage
   float ]                      # average (not marginal!) tax rate
 
-
 @dataclass
 class BasicIncome:
   subsidy_if_broke            : float # minimum wages per month

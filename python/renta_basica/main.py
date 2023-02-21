@@ -3,20 +3,13 @@ from typing import List, Dict, Tuple, Any
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from python.build.nov2022 import mkData
-from python.renta_basica.lib import subsidy
+from   python.build.nov2022  import mkData
+from   python.cdfs.lib       import draw_cdf_of_money
 import python.renta_basica.lib as rb
-from python.cdfs.lib import draw_cdf_of_money
-from python.types import BasicIncome
+from   python.types          import BasicIncome
 
 
 df = mkData()
-
-# Reported pension income below this threshold is assumed
-# not to be a true pension, since small pensions are illegal.
-# See python/renta_basica/choose_treshold.py
-# for how this was determined.
-real_pension_threshold = 5e5
 
 
 # ==============================================
@@ -46,11 +39,11 @@ name_subsidy_pairs : List[ Tuple[ str,
 for name, bi in name_subsidy_pairs:
   df[name] = df.apply (
       lambda row: ( 12 * # yearly
-                    subsidy ( bi, row["total-ish income" ] ) ),
+                    rb.subsidy ( bi, row["total-ish income" ] ) ),
       axis = "columns" )
 
 old = df[ df["age"] >= 65 ]
-old_no_pension = old[ old["pension income"] < real_pension_threshold ]
+old_no_pension = old[ old["pension income"] < rb.real_pension_threshold ]
 
 def describe_subsidies ( orig : pd.DataFrame
                         ): # pure IO (prints to screen)
