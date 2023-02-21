@@ -107,6 +107,7 @@ def mkData () -> pd.DataFrame:
   for c in ["pension income",
             "labor income",
             "rental income",
+            "implicit homeowner income",
             "employee contribs",
             "employer contribs",]:
     m[c] = m[c].fillna(0)
