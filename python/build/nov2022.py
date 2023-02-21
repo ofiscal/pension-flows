@@ -12,6 +12,7 @@ from python.build.common import (
   interpret_columns_ocupados,
   interpret_columns_hogares,
   deduplicate_rows,
+  mk_total_income,
   mk_pension_contribs )
 
 
@@ -118,4 +119,4 @@ def mkData () -> pd.DataFrame:
             "employer contribs",]:
     m[c] = m[c].fillna(0)
 
-  return m
+  return mk_total_income( m )

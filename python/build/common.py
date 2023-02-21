@@ -104,3 +104,18 @@ def mk_pension_contribs ( df : pd.DataFrame
         row["labor income"] )
       , axis = "columns" )
   return df
+
+def mk_total_income ( df : pd.DataFrame
+                      ) -> pd.DataFrame:
+  df["total-ish income"] = (
+    # If you're old, this is probably close to your total income.
+    # TODO ? Add more kinds of income.
+    df[ ["labor income",
+         "pension income",
+         "rental income", ] ]
+    . sum ( axis = "columns" ) )
+  df["total-ish + homeowner income"] = (
+    df[ ["total-ish income",
+         "implicit homeowner income", ] ]
+    . sum ( axis = "columns" ) )
+  return df

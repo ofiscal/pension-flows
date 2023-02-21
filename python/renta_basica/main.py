@@ -12,14 +12,6 @@ from python.types import BasicIncome
 
 df = mkData()
 
-# If you're old, this is probably close to your total income.
-df["total-ish income"] = (
-  df[ ["labor income",
-       "pension income",
-       "rental income", ] ]
-  . sum ( axis = "columns" ) )
-
-
 # =======================================================
 # === Deciding which pension income to consider real. ===
 # =======================================================
