@@ -122,3 +122,17 @@ def mk_total_income ( df : pd.DataFrame
          "implicit homeowner income", ] ]
     . sum ( axis = "columns" ) )
   return df
+
+# Reported pension income below this threshold is assumed
+# not to be a true pension, since small pensions are illegal.
+#
+# SEE python/renta_basica/choose_treshold.py
+# for how this was determined.
+real_pension_threshold = 5e5
+
+def mk_pensioner ( df : pd.DataFrame
+                  ) -> pd.DataFrame:
+  df["pensioner"] = ( ( df["pension income"] >=
+                        real_pension_threshold )
+                      . astype( int ) )
+  return df

@@ -111,4 +111,5 @@ def mkData () -> pd.DataFrame:
             "employer contribs",]:
     m[c] = m[c].fillna(0)
 
-  return bc.mk_total_income( m )
+  return bc.mk_total_income(
+    bc.mk_pensioner( m ) )

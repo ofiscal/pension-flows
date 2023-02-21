@@ -18,21 +18,6 @@ from python.lib    import near_nonzero
 from python.types  import BasicIncome
 
 
-#################################################
-#### Disregarding misreported pension income ####
-#################################################
-
-# Reported pension income below this threshold is assumed
-# not to be a true pension, since small pensions are illegal.
-# See python/renta_basica/choose_treshold.py
-# for how this was determined.
-real_pension_threshold = 5e5
-
-def has_pension ( pension_income = pd.Series
-                 ) -> pd.Series:
-  return pension_income >= real_pension_threshold
-
-
 ####################################
 #### Computing the renta básica ####
 ####################################
