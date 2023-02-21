@@ -68,9 +68,10 @@ def interpret_columns_ocupados ( df : pd.DataFrame
 
 def interpret_columns_hogares ( df : pd.DataFrame
                                ) -> pd.DataFrame:
-  df["homeowner"] = ( df["homeowner"]
-                      # 1 = owns hogar outright. 2 = paying down mortgage.
-                      . isin ( [1,2] ) )
+  df["homeowner"] = (
+    df["homeowner"]
+    . isin ( [1,2] ) # 1 = owns hogar outright. 2 = paying down mortgage.
+    . astype( int ) )
   return df
 
 def deduplicate_rows (
