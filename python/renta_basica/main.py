@@ -5,7 +5,9 @@ from   typing import List, Dict, Tuple, Any
 
 from   python.build.nov2022  import mkData
 import python.renta_basica.lib as rb
-from   python.types          import BasicIncome, BasicIncome_toDict
+from   python.types          import ( BasicIncome,
+                                      BasicIncome_toDict,
+                                      series_toBasicIncome )
 
 
 df = mkData()

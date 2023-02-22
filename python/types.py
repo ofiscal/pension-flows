@@ -30,3 +30,14 @@ def BasicIncome_toDict ( bi : BasicIncome
     "homeowners_included"               : bi.homeowners_included,
     "homeowners_implicit_income_counts" : bi.homeowners_implicit_income_counts,
   } )
+
+def series_toBasicIncome ( s : pd.Series
+                          ) -> BasicIncome:
+  return BasicIncome (
+    subsidy_if_broke                  = s["subsidy_if_broke"],
+    when_subsidy_starts_to_wane       = s["when_subsidy_starts_to_wane"],
+    when_subsidy_disappears           = s["when_subsidy_disappears"],
+    pensioners_included               = s["pensioners_included"],
+    homeowners_included               = s["homeowners_included"],
+    homeowners_implicit_income_counts =
+      s["homeowners_implicit_income_counts"] )
