@@ -38,7 +38,7 @@ def describeBasicIncome ( bi  : BasicIncome,
 
 acc : List[pd.Series] = []
 start_time = datetime.now()
-for subsidy_if_broke in [2e5, 3.5e5, 5e5]:
+for subsidy_if_broke in [0.2,0.35,0.5]:
   for when_subsidy_starts_to_wane in [0,1,2]:
     x = when_subsidy_starts_to_wane
     for when_subsidy_disappears in [x+1, x+2]:
