@@ -30,9 +30,11 @@ def describeBasicIncome ( bi  : BasicIncome,
 
   acc["people (millions)"] = ( df["weight"] . sum()
                                / 1e6 ) # put it in millions
-  acc["cost (billones COP)"] = ( ( ( df["subsidy"] * df["weight"] )
-                                   . sum() )
-                                 / 1e12 )
+  acc["yearly cost (billones COP)"] = (
+    ( ( df["subsidy"] * df["weight"] )
+      . sum() )
+    * 12     # make it yearly
+    / 1e12 ) # put it in billones
   return pd.Series ( { **BasicIncome_toDict(bi),
                        **acc, } )
 
