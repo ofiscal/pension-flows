@@ -1,5 +1,4 @@
 from   datetime import datetime
-from   os.path import join
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
@@ -11,6 +10,13 @@ from   python.types          import ( BasicIncome,
 
 
 df = mkData()
+scenarios = (
+  pd.read_csv(
+    "python/renta_basica/scenarios.csv" )
+  . drop (
+    columns = ["Unnamed: 0",
+               "beneficiarios (millones)",
+               "costo (billones anuales)"] ) )
 
 
 # ==============================================
@@ -37,14 +43,6 @@ def describeBasicIncome ( bi  : BasicIncome,
     / 1e12 ) # put it in billones
   return pd.Series ( { **BasicIncome_toDict(bi),
                        **acc, } )
-
-scenarios = (
-  pd.read_csv(
-    "python/renta_basica/scenarios.csv" )
-  . drop (
-    columns = ["Unnamed: 0",
-               "beneficiarios (millones)",
-               "costo (billones anuales)"] ) )
 
 acc : List[pd.Series] = []
 start_time = datetime.now()
