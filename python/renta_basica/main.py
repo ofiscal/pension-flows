@@ -44,14 +44,16 @@ def describeBasicIncome ( bi  : BasicIncome,
   return pd.Series ( { **BasicIncome_toDict(bi),
                        **acc, } )
 
-acc : List[pd.Series] = []
-start_time = datetime.now()
-for i in scenarios.index:
-  bi = series_toBasicIncome ( scenarios.iloc[i] )
-  acc.append(
-    describeBasicIncome( bi = bi,
-                         df0 = df ) )
-print( datetime.now() - start_time )
+def go() -> pd.DataFrame:
+  acc : List[pd.Series] = []
+  start_time = datetime.now()
+  for i in scenarios.index:
+    bi = series_toBasicIncome ( scenarios.iloc[i] )
+    acc.append(
+      describeBasicIncome( bi = bi,
+                           df0 = df ) )
+  # print( datetime.now() - start_time )
+  return pd.DataFrame( acc )
 
-res = pd.DataFrame( acc )
-res.to_excel( "basic_income_simulations.xlsx" )
+# res = go()
+# res.to_excel ( "basic_income_simulations.xlsx" )
