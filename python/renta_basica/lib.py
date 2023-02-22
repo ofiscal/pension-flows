@@ -15,7 +15,9 @@ from   typing import List, Dict, Tuple, Any
 
 from python.common import min_wage_2022
 from python.lib    import near_nonzero
-from python.types  import BasicIncome
+from python.types  import ( BasicIncome,
+                            BasicIncome_toDict,
+                            series_toBasicIncome )
 
 
 ####################################
@@ -206,7 +208,7 @@ def describeBasicIncome (
   acc = dict() # accumulates return values
 
   df["subsidy"] = df.apply (
-    lambda row: rb.subsidy ( bi, row ),
+    lambda row: subsidy ( bi, row ),
     axis = "columns" )
   df = df[ df["subsidy"] > 0 ]
 
@@ -221,7 +223,8 @@ def describeBasicIncome (
                        **acc, } )
 
 def all_reports(
-    df0       : pd.DataFrame,
+    df        : pd.DataFrame,
+    scenarios : pd.DataFrame,
 ) -> pd.DataFrame:
   acc : List[pd.Series] = []
   for subsidy_if_broke in [0.2,0.35,0.5]:
@@ -245,7 +248,7 @@ def all_reports(
   return pd.DataFrame( acc )
 
 def selected_reports(
-    df0       : pd.DataFrame,
+    df        : pd.DataFrame,
     scenarios : pd.DataFrame,
 ) -> pd.DataFrame:
   acc : List[pd.Series] = []
