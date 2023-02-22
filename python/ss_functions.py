@@ -28,26 +28,30 @@ def tuple_by_threshold (
   if True:
       return tuple_by_threshold( income, schedule[1:] )
 
-def mk_pension ( indep : int,
+def mk_pension ( formal : int,
+                 indep  : int,
                  income : float
                 ) -> float:
-  if indep:
-    (_, compute_base, rate) = tuple_by_threshold (
-      income,
-      ss_contrib_schedule_for_contractor["pension"] )
-    return compute_base( income ) * rate
+  if (not bool(formal)): return 0
   else:
-    (_, compute_base, rate) = tuple_by_threshold (
-      income,
-      ss_contrib_schedule_for_employee["pension"] )
-    return compute_base( income ) * rate
+    if indep:
+      (_, compute_base, rate) = tuple_by_threshold (
+        income,
+        ss_contrib_schedule_for_contractor["pension"] )
+      return compute_base( income ) * rate
+    else:
+      (_, compute_base, rate) = tuple_by_threshold (
+        income,
+        ss_contrib_schedule_for_employee["pension"] )
+      return compute_base( income ) * rate
 
-def mk_pension_employer ( indep : int,
+def mk_pension_employer ( formal : int,
+                          indep  : int,
                           income : float
                          ) -> float:
-  if indep: return 0
+  if bool(indep) | (not bool(formal)): return 0
   else:
     (_, compute_base, rate) = tuple_by_threshold (
-        income,
+      income,
       ss_contrib_schedule_by_employer["pension"] )
     return compute_base( income ) * rate
