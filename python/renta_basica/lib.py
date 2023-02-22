@@ -8,6 +8,7 @@
 #
 # and tests for all of them..
 
+from   datetime import datetime
 import matplotlib.pyplot as plt
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
@@ -15,6 +16,20 @@ from   typing import List, Dict, Tuple, Any
 from python.common import min_wage_2022
 from python.lib    import near_nonzero
 from python.types  import BasicIncome
+
+
+####################################
+#### Getting more data ####
+####################################
+
+def readScenarios():
+  return (
+    pd.read_csv(
+      "python/renta_basica/scenarios.csv" )
+    . drop (
+      columns = ["Unnamed: 0",
+                 "beneficiarios (millones)",
+                 "costo (billones anuales)"] ) )
 
 
 ####################################
@@ -177,3 +192,68 @@ def subsidy ( bi : BasicIncome,
       homeowners_implicit_income_counts = (
         bi.homeowners_implicit_income_counts ),
       row = row ) )
+
+
+##########################
+#### Building reports ####
+##########################
+
+def describeBasicIncome (
+    bi        : BasicIncome,
+    df0       : pd.DataFrame,
+) -> pd.Series:
+  df = df0.copy()
+  acc = dict() # accumulates return values
+
+  df["subsidy"] = df.apply (
+    lambda row: rb.subsidy ( bi, row ),
+    axis = "columns" )
+  df = df[ df["subsidy"] > 0 ]
+
+  acc["people (millions)"] = ( df["weight"] . sum()
+                               / 1e6 ) # put it in millions
+  acc["yearly cost (billones COP)"] = (
+    ( ( df["subsidy"] * df["weight"] )
+      . sum() )
+    * 12     # make it yearly
+    / 1e12 ) # put it in billones
+  return pd.Series ( { **BasicIncome_toDict(bi),
+                       **acc, } )
+
+def all_reports(
+    df0       : pd.DataFrame,
+) -> pd.DataFrame:
+  acc : List[pd.Series] = []
+  for subsidy_if_broke in [0.2,0.35,0.5]:
+    for when_subsidy_starts_to_wane in [0,1,2]:
+      for when_subsidy_disappears in [when_subsidy_starts_to_wane + 1,
+                                      when_subsidy_starts_to_wane + 2]:
+        for pensioners_included in [0,1]:
+          for homeowners_included in [0,1]:
+            for homeowners_implicit_income_counts in [0,1]:
+              bi = BasicIncome (
+                subsidy_if_broke            = subsidy_if_broke,
+                when_subsidy_starts_to_wane = when_subsidy_starts_to_wane,
+                when_subsidy_disappears     = when_subsidy_disappears,
+                pensioners_included         = pensioners_included,
+                homeowners_included         = homeowners_included,
+                homeowners_implicit_income_counts = \
+                  homeowners_implicit_income_counts, )
+              acc.append(
+                describeBasicIncome( bi = bi,
+                                     df0 = df ) )
+  return pd.DataFrame( acc )
+
+def selected_reports(
+    df0       : pd.DataFrame,
+    scenarios : pd.DataFrame,
+) -> pd.DataFrame:
+  acc : List[pd.Series] = []
+  start_time = datetime.now()
+  for i in scenarios.index:
+    bi = series_toBasicIncome ( scenarios.iloc[i] )
+    acc.append(
+      describeBasicIncome( bi = bi,
+                           df0 = df ) )
+  # print( datetime.now() - start_time )
+  return pd.DataFrame( acc )
