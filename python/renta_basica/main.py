@@ -1,11 +1,9 @@
 from   datetime import datetime
-import matplotlib.pyplot as plt
 from   os.path import join
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
 from   python.build.nov2022  import mkData
-from   python.cdfs.lib       import draw_cdf_of_money
 import python.renta_basica.lib as rb
 from   python.types          import BasicIncome, BasicIncome_toDict
 
