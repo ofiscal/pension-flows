@@ -40,8 +40,8 @@ acc : List[pd.Series] = []
 start_time = datetime.now()
 for subsidy_if_broke in [0.2,0.35,0.5]:
   for when_subsidy_starts_to_wane in [0,1,2]:
-    x = when_subsidy_starts_to_wane
-    for when_subsidy_disappears in [x+1, x+2]:
+    wssw = when_subsidy_starts_to_wane
+    for when_subsidy_disappears in [wssw + 1, wssw + 2]:
       for pensioners_included in [0,1]:
         for homeowners_included in [0,1]:
           for homeowners_implicit_income_counts in [0,1]:
