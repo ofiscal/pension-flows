@@ -37,7 +37,7 @@ def series_toBasicIncome ( s : pd.Series
     subsidy_if_broke                  = s["subsidy_if_broke"],
     when_subsidy_starts_to_wane       = s["when_subsidy_starts_to_wane"],
     when_subsidy_disappears           = s["when_subsidy_disappears"],
-    pensioners_included               = s["pensioners_included"],
-    homeowners_included               = s["homeowners_included"],
+    pensioners_included               = bool( s["pensioners_included"] ),
+    homeowners_included               = bool( s["homeowners_included"] ),
     homeowners_implicit_income_counts =
-      s["homeowners_implicit_income_counts"] )
+      bool( s["homeowners_implicit_income_counts"] ) )
