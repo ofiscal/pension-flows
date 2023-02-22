@@ -38,26 +38,21 @@ def describeBasicIncome ( bi  : BasicIncome,
   return pd.Series ( { **BasicIncome_toDict(bi),
                        **acc, } )
 
+scenarios = (
+  pd.read_csv(
+    "python/renta_basica/scenarios.csv" )
+  . drop (
+    columns = ["Unnamed: 0",
+               "beneficiarios (millones)",
+               "costo (billones anuales)"] ) )
+
 acc : List[pd.Series] = []
 start_time = datetime.now()
-for subsidy_if_broke in [0.2,0.35,0.5]:
-  for when_subsidy_starts_to_wane in [0,1,2]:
-    wssw = when_subsidy_starts_to_wane
-    for when_subsidy_disappears in [wssw + 1, wssw + 2]:
-      for pensioners_included in [0,1]:
-        for homeowners_included in [0,1]:
-          for homeowners_implicit_income_counts in [0,1]:
-            bi = BasicIncome (
-              subsidy_if_broke            = subsidy_if_broke,
-              when_subsidy_starts_to_wane = when_subsidy_starts_to_wane,
-              when_subsidy_disappears     = when_subsidy_disappears,
-              pensioners_included         = pensioners_included,
-              homeowners_included         = homeowners_included,
-              homeowners_implicit_income_counts = \
-                homeowners_implicit_income_counts, )
-            acc.append(
-              describeBasicIncome( bi = bi,
-                                   df0 = df ) )
+for i in scenarios.index:
+  bi = series_toBasicIncome ( scenarios.iloc[i] )
+  acc.append(
+    describeBasicIncome( bi = bi,
+                         df0 = df ) )
 print( datetime.now() - start_time )
 
 res = pd.DataFrame( acc )
