@@ -7,7 +7,6 @@
 from typing import Tuple, List, Dict
 import pandas as pd
 
-from python.common import min_wage
 from python.ss_schedules import (
   ss_contrib_schedule_for_contractor,
   ss_contrib_schedule_for_employee,

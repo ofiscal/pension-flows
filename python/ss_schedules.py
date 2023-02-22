@@ -6,10 +6,11 @@
 
 from typing import Tuple, List, Dict, Callable
 
-from python.common import min_wage
+from python.common import min_wage_2022
 from python.types import Schedule
 
 
+min_wage = min_wage_2022
 
 ss_contrib_schedule_for_contractor : \
   Dict [ str,

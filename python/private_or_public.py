@@ -5,7 +5,7 @@ import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
 import python.build.nov2022 as nov2022
-from python.common import min_wage
+from python.common import min_wage_2022
 
 
 df22 = nov2022.mkData()
@@ -21,7 +21,7 @@ def describe_data (
     # The first 160,000 COP of contributions go to the public system,
     # and the rest to the private one.
     df["employee contribs"] + df["employer contribs"],
-    0.16 * min_wages_to_public_fund * min_wage )
+    0.16 * min_wages_to_public_fund * min_wage_2022 )
 
   # Money contributed to the private pension system.
   df["to private"] = ( df["employee contribs"] +

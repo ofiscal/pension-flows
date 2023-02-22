@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
-from python.common import min_wage
+from python.common import min_wage_2022
 from python.lib    import near_nonzero
 from python.types  import BasicIncome
 
@@ -113,9 +113,9 @@ def test_income_for_subsidy_purposes():
 def subsidy_if_qualified ( bi : BasicIncome,
                            relevant_income : float
                           ) -> float:
-  intercept :  float = min_wage * bi.subsidy_if_broke
-  fade_start : float = min_wage * bi.when_subsidy_starts_to_wane
-  fade_end :   float = min_wage * bi.when_subsidy_disappears
+  intercept :  float = min_wage_2022 * bi.subsidy_if_broke
+  fade_start : float = min_wage_2022 * bi.when_subsidy_starts_to_wane
+  fade_end :   float = min_wage_2022 * bi.when_subsidy_disappears
 
   # The easiest way to understand this expression
   # might be to read the function (next) that tests it.
@@ -134,33 +134,33 @@ def test_subsidy_if_qualified ():
     homeowners_implicit_income_counts = None ) # irrelevant
 
   assert near_nonzero ( subsidy_if_qualified (bi, 0),
-                        bi . subsidy_if_broke * min_wage )
+                        bi . subsidy_if_broke * min_wage_2022 )
   assert near_nonzero (
     subsidy_if_qualified( bi,
-                          bi.when_subsidy_starts_to_wane * min_wage ),
-    bi . subsidy_if_broke * min_wage )
+                          bi.when_subsidy_starts_to_wane * min_wage_2022 ),
+    bi . subsidy_if_broke * min_wage_2022 )
 
   # Halfway from when_subsidy_starts_to_wane to when_subsidy_disappears,
   # the subsidy should be at half what it is for someone who's broke.
   assert near_nonzero (
     subsidy_if_qualified (
       bi,
-      0.5 * ( bi.when_subsidy_starts_to_wane * min_wage
-              + bi.when_subsidy_disappears * min_wage ) ),
-    bi.subsidy_if_broke * min_wage / 2 )
+      0.5 * ( bi.when_subsidy_starts_to_wane * min_wage_2022
+              + bi.when_subsidy_disappears * min_wage_2022 ) ),
+    bi.subsidy_if_broke * min_wage_2022 / 2 )
 
   # At when_subsidy_disappears at thereafter, the subsidy is 0.
   assert near_nonzero (
     subsidy_if_qualified( bi,
-                          bi.when_subsidy_disappears * min_wage),
+                          bi.when_subsidy_disappears * min_wage_2022),
     0 )
   assert near_nonzero (
     subsidy_if_qualified( bi,
-                          bi.when_subsidy_disappears * min_wage * 2),
+                          bi.when_subsidy_disappears * min_wage_2022 * 2),
     0 )
   assert near_nonzero (
     subsidy_if_qualified( bi,
-                          bi.when_subsidy_disappears * min_wage * 3),
+                          bi.when_subsidy_disappears * min_wage_2022 * 3),
     0 )
 
 def subsidy ( bi : BasicIncome,
