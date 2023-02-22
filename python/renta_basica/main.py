@@ -56,5 +56,4 @@ for i in scenarios.index:
 print( datetime.now() - start_time )
 
 res = pd.DataFrame( acc )
-
-res.to_excel( "basic_income_scenarios.xlsx" )
+res.to_excel( "basic_income_simulations.xlsx" )
