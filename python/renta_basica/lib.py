@@ -54,8 +54,8 @@ def qualifies_for_subsidy ( bi : BasicIncome,
                            ) -> bool:
     return all ( [
       row["age"] >= 65,
-      bi.pensioners_included | (row["pensioner"] == 0),
-      bi.homeowners_included | (row["homeowner"] == 0) ] )
+      (not bi.pensioners_excluded) | (row["pensioner"] == 0),
+      (not bi.homeowners_excluded) | (row["homeowner"] == 0) ] )
 
 def test_qualifies_for_subsidy():
   p = pd.DataFrame ( { "age" : [60,60,60,60, 70,70,70,70],
@@ -67,8 +67,8 @@ def test_qualifies_for_subsidy():
         BasicIncome ( subsidy_if_broke = 1/2,
                       when_subsidy_starts_to_wane = 2,
                       when_subsidy_disappears = 4,
-                      pensioners_included = 0,
-                      homeowners_included = 0,
+                      pensioners_excluded = 1,
+                      homeowners_excluded = 1,
                       homeowners_implicit_income_counts = 0 ),
         row ),
       axis = "columns" )
@@ -82,8 +82,8 @@ def test_qualifies_for_subsidy():
         BasicIncome ( subsidy_if_broke = 1/2,
                       when_subsidy_starts_to_wane = 2,
                       when_subsidy_disappears = 4,
-                      pensioners_included = 1, # changed
-                      homeowners_included = 0,
+                      pensioners_excluded = 0, # changed
+                      homeowners_excluded = 1,
                       homeowners_implicit_income_counts = 0 ),
         row ),
       axis = "columns" )
@@ -97,8 +97,8 @@ def test_qualifies_for_subsidy():
         BasicIncome ( subsidy_if_broke = 1/2,
                       when_subsidy_starts_to_wane = 2,
                       when_subsidy_disappears = 4,
-                      pensioners_included = 0, # changed
-                      homeowners_included = 1, # changed
+                      pensioners_excluded = 1, # changed
+                      homeowners_excluded = 0, # changed
                       homeowners_implicit_income_counts = 0 ),
         row ),
       axis = "columns" )
@@ -146,8 +146,8 @@ def test_subsidy_if_qualified ():
     subsidy_if_broke = 1/2,
     when_subsidy_starts_to_wane = 2,
     when_subsidy_disappears = 4,
-    pensioners_included = None,                # irrelevant
-    homeowners_included = None,                # irrelevant
+    pensioners_excluded = None,                # irrelevant
+    homeowners_excluded = None,                # irrelevant
     homeowners_implicit_income_counts = None ) # irrelevant
 
   assert near_nonzero ( subsidy_if_qualified (bi, 0),
@@ -231,15 +231,15 @@ def all_reports(
     for when_subsidy_starts_to_wane in [0,1,2]:
       for when_subsidy_disappears in [when_subsidy_starts_to_wane + 1,
                                       when_subsidy_starts_to_wane + 2]:
-        for pensioners_included in [0,1]:
-          for homeowners_included in [0,1]:
+        for pensioners_excluded in [1,0]:
+          for homeowners_excluded in [1,0]:
             for homeowners_implicit_income_counts in [0,1]:
               bi = BasicIncome (
                 subsidy_if_broke            = subsidy_if_broke,
                 when_subsidy_starts_to_wane = when_subsidy_starts_to_wane,
                 when_subsidy_disappears     = when_subsidy_disappears,
-                pensioners_included         = pensioners_included,
-                homeowners_included         = homeowners_included,
+                pensioners_excluded         = pensioners_excluded,
+                homeowners_excluded         = homeowners_excluded,
                 homeowners_implicit_income_counts = \
                   homeowners_implicit_income_counts, )
               acc.append(

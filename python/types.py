@@ -16,8 +16,8 @@ class BasicIncome:
   when_subsidy_starts_to_wane : float # minimum wages per month
   when_subsidy_disappears     : float # minimum wages per month.
     # Should be bigger than `when_subsidy_starts_to_wane`.
-  pensioners_included               : bool
-  homeowners_included               : bool
+  pensioners_excluded               : bool
+  homeowners_excluded               : bool
   homeowners_implicit_income_counts : bool # Whether implicit homeowners income is included in total income when computing the subsidy amount.
 
 def BasicIncome_toDict ( bi : BasicIncome
@@ -26,8 +26,8 @@ def BasicIncome_toDict ( bi : BasicIncome
     "subsidy_if_broke"                  : bi.subsidy_if_broke,
     "when_subsidy_starts_to_wane"       : bi.when_subsidy_starts_to_wane,
     "when_subsidy_disappears"           : bi.when_subsidy_disappears,
-    "pensioners_included"               : bi.pensioners_included,
-    "homeowners_included"               : bi.homeowners_included,
+    "pensioners_excluded"               : bi.pensioners_excluded,
+    "homeowners_excluded"               : bi.homeowners_excluded,
     "homeowners_implicit_income_counts" : bi.homeowners_implicit_income_counts,
   } )
 
@@ -37,7 +37,7 @@ def series_toBasicIncome ( s : pd.Series
     subsidy_if_broke                  = s["subsidy_if_broke"],
     when_subsidy_starts_to_wane       = s["when_subsidy_starts_to_wane"],
     when_subsidy_disappears           = s["when_subsidy_disappears"],
-    pensioners_included               = bool( s["pensioners_included"] ),
-    homeowners_included               = bool( s["homeowners_included"] ),
+    pensioners_excluded               = bool( s["pensioners_excluded"] ),
+    homeowners_excluded               = bool( s["homeowners_excluded"] ),
     homeowners_implicit_income_counts =
       bool( s["homeowners_implicit_income_counts"] ) )
