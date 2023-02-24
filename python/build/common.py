@@ -118,9 +118,9 @@ def mk_pension_contribs ( df : pd.DataFrame
       ("employer contribs", mk_pension_employer) ]:
     df[new_col] = df.apply (
       lambda row: function (
-        formal = row["formal"],
-        indep  = row["indep"],
-        income = row["labor income"] )
+        formal       = row["formal"],
+        indep        = row["indep"],
+        labor_income = row["labor income"] )
       , axis = "columns" )
   return df
 

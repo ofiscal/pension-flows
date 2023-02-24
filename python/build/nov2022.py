@@ -3,8 +3,6 @@ from os.path import join
 from numpy import nan
 import pandas as pd
 
-from python.ss_functions import ( mk_pension,
-                                  mk_pension_employer, )
 import python.build.common as bc
 
 
