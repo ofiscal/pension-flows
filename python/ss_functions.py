@@ -33,7 +33,7 @@ def mk_pension ( formal       : int,
                  indep        : int,
                  labor_income : float
                 ) -> float:
-  if formal in [0, nan, None]): return 0
+  if formal in [0, nan, None]: return 0
   else:
     if indep:
       (_, compute_base, rate) = tuple_by_threshold (
