@@ -4,8 +4,9 @@
 # That's expedient but inelegant.
 # Better to separate these into an independent module that both can import.
 
-from typing import Tuple, List, Dict
+from   numpy import nan
 import pandas as pd
+from   typing import Tuple, List, Dict
 
 from python.ss_schedules import (
   ss_contrib_schedule_for_contractor,
@@ -32,7 +33,7 @@ def mk_pension ( formal       : int,
                  indep        : int,
                  labor_income : float
                 ) -> float:
-  if (not bool(formal)): return 0
+  if formal in [0, nan, None]: return 0
   else:
     if indep:
       (_, compute_base, rate) = tuple_by_threshold (
@@ -49,7 +50,9 @@ def mk_pension_employer ( formal       : int,
                           indep        : int,
                           labor_income : float
                          ) -> float:
-  if bool(indep) | (not bool(formal)): return 0
+  if any ( [ formal in [0, nan, None],
+             indep == 1 ] ):
+    return 0
   else:
     (_, compute_base, rate) = tuple_by_threshold (
       labor_income,
