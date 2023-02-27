@@ -21,20 +21,6 @@ from python.types  import ( BasicIncome,
 
 
 ####################################
-#### Getting more data ####
-####################################
-
-def readScenarios():
-  return (
-    pd.read_csv(
-      "python/renta_basica/scenarios.csv" )
-    . drop (
-      columns = ["Unnamed: 0",
-                 "beneficiarios (millones)",
-                 "costo (billones anuales)"] ) )
-
-
-####################################
 #### Computing the renta básica ####
 ####################################
 
