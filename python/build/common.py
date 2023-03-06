@@ -61,20 +61,22 @@ def interpret_columns_generales (
   df["female"]              =  df ["female"] - 1
   df["child"]               = (df ["age"] < 18        ) . astype(int)
   df["jefe hogar"]          = (df ["parentesco"] == 1 ) . astype(int)
-  df["child of jefe hogar"] = (df ["parentesco"] == 3 ) . astype(int)
+  # df["child of jefe hogar"] = (df ["parentesco"] == 3 ) . astype(int)
+    # Not (so far) needed -- for "forados",
+    # any child counts, biological or otherwise.
 
-  if True: # Create "child in household"
+  if True: # Create "household includes children"
     ag = (
       df [ df["child"] == 1 ]
       [["DIR"]] # No other columns, just this, which becomes the index.
       . groupby ( ["DIR"] )
       . agg ( "first" ) )
-    ag["child in household"] = 1 # Now "ag" has one column, this.
+    ag["household includes children"] = 1 # Now "ag" has one column, this.
     df = df.merge ( ag,
                     how = "left",
                     on = "DIR" )
-    df["child in household"] = (
-      df["child in household"]
+    df["household includes children"] = (
+      df["household includes children"]
       . fillna( 0 ) )
 
   return df
