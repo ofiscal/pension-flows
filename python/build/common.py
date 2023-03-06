@@ -59,6 +59,7 @@ def interpret_columns_generales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
   df["female"]              =  df ["female"] - 1
+  df["child"]               = (df ["age"] < 18        ) . astype(int)
   df["jefe hogar"]          = (df ["parentesco"] == 1 ) . astype(int)
   df["child of jefe hogar"] = (df ["parentesco"] == 3 ) . astype(int)
   return df
