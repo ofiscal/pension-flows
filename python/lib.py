@@ -1,7 +1,14 @@
 # DEFINED HERE:
 #
+# def near_nonzero (a : float, b : float) -> bool:
+#
 # def drop_none_values_from_dict ( d : Dict[Any,Any]
 #                                 ) -> Dict[Any,Any]:
+#
+# def constraint_string (
+#     colname_colval_pairs : Dict[str, Any],
+# ) -> str:
+#
 # def df_name_from_constraints (
 #     colname_colval_pairs : Dict[str, Any],
 # ) -> str:
