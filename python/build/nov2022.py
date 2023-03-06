@@ -66,6 +66,30 @@ def raw_otros_ingresos_renamed () -> pd.DataFrame:
       ** dicts_to_rename_columns_2022["universal"],
       ** dicts_to_rename_columns_2022["otros_ingresos"] } )
 
+# Create these variables:
+#   "labor income is only income for household"
+#   "labor income is only income for children"
+def mkBreadwinner (df : pd.DataFrame) -> pd.DataFrame:
+  ag = (
+    df [["DIR", "total-ish income"]]
+    . groupby( ["DIR"] )
+    . agg("sum")
+    . rename ( columns = { "total-ish income" :
+                           "household total-ish income" } ) )
+  df = df.merge ( ag,
+                  how = "left",
+                  on = ["DIR"] )
+
+  df["labor income is only income for household"] = (
+    ( df["labor income"] > ( df["household total-ish income"]
+                             * 0.99 ) )
+    . astype( int ) )
+  df["labor income is only income for children"] = (
+    df["household includes children"] *
+    df["labor income is only income for household"] )
+
+  return df
+
 def mkData () -> pd.DataFrame:
   cg = bc.interpret_columns_generales (
     bc.deduplicate_rows (
@@ -110,5 +134,6 @@ def mkData () -> pd.DataFrame:
             "employer contribs",]:
     m[c] = m[c].fillna(0)
 
-  return bc.mk_total_income(
-    bc.mk_pensioner( m ) )
+  return mkBreadwinner (
+    bc.mk_total_income (
+      bc.mk_pensioner( m ) ) )
