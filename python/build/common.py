@@ -62,6 +62,21 @@ def interpret_columns_generales (
   df["child"]               = (df ["age"] < 18        ) . astype(int)
   df["jefe hogar"]          = (df ["parentesco"] == 1 ) . astype(int)
   df["child of jefe hogar"] = (df ["parentesco"] == 3 ) . astype(int)
+
+  if True: # Create "child in household"
+    ag = (
+      df [ df["child"] == 1 ]
+      [["DIR"]] # No other columns, just this, which becomes the index.
+      . groupby ( ["DIR"] )
+      . agg ( "first" ) )
+    ag["child in household"] = 1 # Now "ag" has one column, this.
+    df = df.merge ( ag,
+                    how = "left",
+                    on = "DIR" )
+    df["child in household"] = (
+      df["child in household"]
+      . fillna( 0 ) )
+
   return df
 
 def interpret_columns_ocupados ( df : pd.DataFrame
