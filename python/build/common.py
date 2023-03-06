@@ -27,7 +27,9 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
   # are those column names accurate.
 
   "generales" : {
-    "P6040" : "age" },
+    "P6040" : "age",
+    "P6050" : "parentesco",
+  },
 
   "ocupados" : {
     "INGLABO" : "labor income",
@@ -56,7 +58,9 @@ dicts_to_rename_columns : Dict [ str, Dict [ str, str ] ] = {
 def interpret_columns_generales (
     df : pd.DataFrame
 ) -> pd.DataFrame:
-  df["female"] = df ["female"] - 1
+  df["female"]              =  df ["female"] - 1
+  df["jefe hogar"]          = (df ["parentesco"] == 1 ) . astype(int)
+  df["child of jefe hogar"] = (df ["parentesco"] == 3 ) . astype(int)
   return df
 
 def interpret_columns_ocupados ( df : pd.DataFrame
