@@ -3,13 +3,13 @@ from typing import List, Dict, Tuple, Any
 import pandas as pd
 
 from python.cdfs.lib import draw_cdf_of_money, readme_string
-from python.build.nov2021 import mkData
+from python.build.nov2021 import mkMonth
 from python.lib import ( constraint_string,
                          df_subset_from_constraints,
                          drop_none_values_from_dict, )
 
 
-df = mkData()
+df = mkMonth( month = 11 )
 
 constraints : List[ Dict[ str, Any ] ] = [
   drop_none_values_from_dict (

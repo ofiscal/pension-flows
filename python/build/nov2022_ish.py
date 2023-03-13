@@ -1,3 +1,9 @@
+# PURPOSE:
+# These are functions that should work to build data
+# for any month in the GEIH that is similar to nov2022.
+# I'm not sure which months those are,
+# but I know that not all of 2022 was coded the same way.
+
 from typing import List, Dict, Tuple
 from os.path import join
 from numpy import nan
@@ -21,12 +27,14 @@ if True: # Add 2022-specific variables to `bc.dicts_to_rename_columns`.
     **dicts_to_rename_columns_2022["universal"],
     "FEX_C18"    : "weight" }
 
-def fetch_one ( filename : str,
-                how_to_rename_columns : Dict [str, str]
+def fetch_one ( month : int,
+                filename : str,
+                how_to_rename_columns : Dict [str, str],
                ) -> pd.DataFrame:
   df = (
     pd.read_csv (
-      join ( bc.year_month,
+      join ( "data/geih",
+             "2022-" + str(month),
              filename + ".csv" ),
       usecols = how_to_rename_columns.keys(),
       encoding = "latin",
@@ -34,33 +42,37 @@ def fetch_one ( filename : str,
     . rename ( columns = how_to_rename_columns ) )
   return df
 
-def raw_hogar_renamed () -> pd.DataFrame:
+def raw_hogar_renamed ( month : int ) -> pd.DataFrame:
   how_to_rename_columns : Dict[str,str] = {
     ** dicts_to_rename_columns_2022["universal"],
     ** dicts_to_rename_columns_2022["hogar"] }
   del( how_to_rename_columns["ORDEN"] )
     # Uniquely, the "hogar" file has no such column.
   return fetch_one (
+    month = month,
     filename = "hogar",
     how_to_rename_columns = how_to_rename_columns )
 
-def raw_generales_renamed () -> pd.DataFrame:
+def raw_generales_renamed ( month : int ) -> pd.DataFrame:
   return fetch_one (
+    month = month,
     filename = \
       "generales",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
       ** dicts_to_rename_columns_2022["generales"] } )
 
-def raw_ocupados_renamed () -> pd.DataFrame:
+def raw_ocupados_renamed ( month : int ) -> pd.DataFrame:
   return fetch_one (
+    month = month,
     filename = "ocupados",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
       ** dicts_to_rename_columns_2022["ocupados"] } )
 
-def raw_otros_ingresos_renamed () -> pd.DataFrame:
+def raw_otros_ingresos_renamed ( month : int ) -> pd.DataFrame:
   return fetch_one (
+    month = month,
     filename = "ingresos-e-impuestos-otros",
     how_to_rename_columns = {
       ** dicts_to_rename_columns_2022["universal"],
@@ -90,24 +102,24 @@ def mkBreadwinner (df : pd.DataFrame) -> pd.DataFrame:
 
   return df
 
-def mkData () -> pd.DataFrame:
+def mkMonth ( month : int ) -> pd.DataFrame:
   cg = bc.interpret_columns_generales (
     bc.deduplicate_rows (
-      raw_generales_renamed (),
+      raw_generales_renamed ( month = month ),
       primary_keys = bc.primary_keys ) )
   otros = bc.deduplicate_rows ( # No interpretation needed.
-    raw_otros_ingresos_renamed (),
+    raw_otros_ingresos_renamed ( month = month ),
     primary_keys = bc.primary_keys )
   ocup = bc.mk_pension_contribs ( # This extra step is not present
                                   # in the other two tables.
     bc.interpret_columns_ocupados (
       bc.deduplicate_rows (
-        raw_ocupados_renamed (),
+        raw_ocupados_renamed ( month = month ),
         primary_keys = bc.primary_keys ) ) )
   hogar = bc.interpret_columns_hogares (
     bc.deduplicate_rows (
       # Unnecessary, but easier than maintaining a proof that it's unnecessary
-      raw_hogar_renamed (),
+      raw_hogar_renamed ( month = month ),
       ["DIR","SEC"] ) ) # Because "hogar" has no "ORDEN" column.
 
   m = pd.merge (

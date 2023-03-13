@@ -9,7 +9,7 @@ from python.common import min_wage_2022
 
 
 if True: # make data
-  df22 = nov2022_ish.mkData()
+  df22 = nov2022_ish.mkMonth( month = 11 )
 
   df22["total contribs"] = ( df22["employee contribs"] +
                              df22["employer contribs"] )

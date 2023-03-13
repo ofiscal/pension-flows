@@ -11,11 +11,11 @@
 from typing import List, Dict, Tuple, Any
 import pandas as pd
 
-from python.build.nov2022_ish import mkData
+from python.build.nov2022_ish import mkMonth
 from python.cdfs.lib import draw_cdf_of_money
 
 
-df = mkData()
+df = mkMonth( month = 11 )
 
 draw_cdf_of_money (
   colname         = "pension income",

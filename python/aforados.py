@@ -9,7 +9,7 @@ from python.common import min_wage_2022
 
 
 if True: # make data
-  df22 = nov2022_ish.mkData()
+  df22 = nov2022_ish.mkMonth ( month = 11 )
 
 breadwinner          = "labor income is only income for household"
 breadwinner_for_kids = "labor income is only income for children"
