@@ -166,3 +166,15 @@ and "person's labor is only income for household" is about 5% lower."""
     df["month"] = i
     acc.append( df )
   return pd.concat ( acc )
+
+def save_marchThroughDec () -> ():
+  mk_marchThroughDec() . to_csv (
+    join ( "output",
+           "2022-03-onward.csv" ),
+    index = False )
+
+def read_marchThroughDec () -> pd.DataFrame:
+  return (
+    pd . read_csv (
+      join ( "output",
+             "2022-03-onward.csv" ) ) )
