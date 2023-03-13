@@ -19,8 +19,8 @@ if True: # make data
                     ( (df22["age"] < 52) &
                       (df22["female"] == 0) ) )
 
-  young = df22[   df22["young"] ]
-  old   = df22[ ~ df22["young"] ]
+  young = df22[   df22["young"] ] . copy()
+  old   = df22[ ~ df22["young"] ] . copy()
 
 def young_old_split (): # pure IO (prints to screen)
   contribs       = ( df22 ["total contribs"] * df22 ["weight"] ). sum()
@@ -55,23 +55,31 @@ def public_private_split (
   public_money  = ( df["to public"]  * df["weight"] ) . sum()
   private_money = ( df["to private"] * df["weight"] ) . sum()
 
-  print( "Using the " + nickname + " data, and assuming exactly the first " + str(min_wages_to_public_fund) + " minimum wages in earnings go to the public fund (the rest going to the private one):" )
-  print( "Total billones de COP per month to public system: ",
-          public_money / 1e12 )
-  print( "Share going to public system: ",
-          public_money / all_money )
-  print( "Total billones de COP per month to private system: ",
-          private_money / 1e12 )
-  print( "Share going to private system: ",
-          private_money / all_money )
-  print()
+  return pd.Series ( {
+    "sample" : nickname,
+    "threshold" : min_wages_to_public_fund,
+    "public billones COP / month" : public_money / 1e12,
+    "public share" : public_money / all_money,
+    "private billones COP / month" : private_money / 1e12,
+    "private share" : private_money / all_money } )
 
 young_old_split()
 
-for (nickname,df) in [
-    ("November 2022 (male age < 52) or (female age < 47)", young),
-    ("November 2022", df22) ]:
-  for threshold in [1,2]:
-    public_private_split ( nickname                 = nickname,
-                           min_wages_to_public_fund = threshold,
-                           df                       = df )
+def table_results ( nRows : int,
+                    max_threshold_in_millones = 5) -> pd.DataFrame:
+  acc = []
+  for (nickname,df) in [
+      ("November 2022 (male age < 52) or (female age < 47)", young),
+      ("November 2022", df22) ]:
+    for threshold in [ 5 * i/max_threshold_in_millones
+                       for i in range(1, nRows + 1) ]:
+      acc.append (
+        public_private_split (
+          nickname                 = nickname,
+          min_wages_to_public_fund = threshold,
+          df                       = df ) )
+  return pd.DataFrame ( acc )
+
+for nRows in [5,500]:
+  ( table_results ( nRows = nRows )
+    . to_excel ( "private public pension splits, " + str(nRows) + " rows.xlsx" ) )
