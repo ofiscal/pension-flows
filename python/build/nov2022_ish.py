@@ -149,3 +149,20 @@ def mkMonth ( month : int ) -> pd.DataFrame:
   return mkBreadwinner (
     bc.mk_total_income (
       bc.mk_pensioner( m ) ) )
+
+def mk_marchThroughDec () -> pd.DataFrame:
+  """WHY NO JANUARY OR FEBRUARY:
+January is coded differently, and I haven't written code to parse it yet.
+February seems like an outlier -- we were still coming out of the pandemic,
+and incomes were starkly lower. So were a few non-income variables
+-- DIR is about 30% lower than in the other months;
+"independent" is 2 percentage points higher
+(48%-ish vs. an average around 46%),
+pensioner is 10% lower,
+and "person's labor is only income for household" is about 5% lower."""
+  acc : List[pd.DataFrame] = []
+  for i in range(3,13):
+    df : pd.DataFrame = mkMonth(i)
+    df["month"] = i
+    acc.append( df )
+  return pd.concat ( acc )
