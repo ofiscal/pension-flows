@@ -52,7 +52,7 @@ print ( df22
 print ( df22
         [ df22["labor income"] > 0 ]
         . groupby (
-          ["breadwinner for kids",
+          [breadwinner_for_kids,
            "female", ] )
         ["formal"]
         . describe() [["mean"]] )
