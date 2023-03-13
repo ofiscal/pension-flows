@@ -11,15 +11,20 @@ from python.common import min_wage_2022
 if True: # make data
   df22 = nov2022.mkData()
 
-df22 = df22.rename ( columns =
-  { "labor income is only income for children" : "breadwinner 4 kids" } )
+breadwinner          = "labor income is only income for household"
+breadwinner_for_kids = "labor income is only income for children"
+
+
+#####
+##### formality by groups
+#####
 
 print ( df22
         [ df22["labor income"] > 0 ]
         ["formal"]
         . describe() [["mean"]] )
 
-for c in ["breadwinner 4 kids",
+for c in [breadwinner_for_kids,
           "female",
           "indep", ]:
   print ( df22
@@ -39,7 +44,7 @@ print ( df22
 print ( df22
         [ df22["labor income"] > 0 ]
         . groupby (
-          ["breadwinner 4 kids",
+          [breadwinner_for_kids,
            "indep", ] )
         ["formal"]
         . describe() [["mean"]] )
@@ -55,8 +60,23 @@ print ( df22
 print ( df22
         [ df22["labor income"] > 0 ]
         . groupby (
-          ["breadwinner 4 kids",
+          [breadwinner_for_kids,
            "female",
            "indep", ] )
         ["formal"]
+        . describe() [["mean"]] )
+
+
+#####
+##### "breadwinner" by groups
+#####
+
+print ( df22
+        [ df22["labor income"] > 0 ]
+        [breadwinner]
+        . describe() [["mean"]] )
+
+print ( df22
+        [ df22["labor income"] > 0 ]
+        [breadwinner_for_kids]
         . describe() [["mean"]] )
