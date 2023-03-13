@@ -4,12 +4,12 @@ from   os.path import join
 import pandas as pd
 from   typing import List, Dict, Tuple, Any
 
-import python.build.nov2022 as nov2022
+import python.build.nov2022_ish as nov2022_ish
 from python.common import min_wage_2022
 
 
 if True: # make data
-  df22 = nov2022.mkData()
+  df22 = nov2022_ish.mkData()
 
 breadwinner          = "labor income is only income for household"
 breadwinner_for_kids = "labor income is only income for children"
