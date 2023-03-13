@@ -34,7 +34,7 @@ def fetch_one ( month : int,
   df = (
     pd.read_csv (
       join ( "data/geih",
-             "2022-" + str(month),
+             "2022-" + str(month).zfill(2),
              filename + ".csv" ),
       usecols = how_to_rename_columns.keys(),
       encoding = "latin",
