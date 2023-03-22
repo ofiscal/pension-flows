@@ -24,24 +24,24 @@ import pandas as pd
 from typing import List, Dict, Any
 
 
-def near_nonzero (a : float, b : float) -> bool:
+def near_nonzero (a : float, b : float, tolerance : float) -> bool:
   # TODO: This should be part of ofiscal_utils.
   # tax.co has a similar, better function.
-  """True iff the inputs are within either 1% or 0.001 of each other."""
-  return ( (abs(a-b) < 0.001)
+  """True iff the inputs are within either 1% or tolerance of each other."""
+  return ( (abs(a-b) < tolerance)
            or ( ( a < (0.99*b) ) and
                 ( b < (0.99*a) ) ) )
 
 def test_near_nonzero ():
-  assert near_nonzero(0.5,1) == False
-  assert near_nonzero(1,0.5) == False
+  assert near_nonzero(0.5,1,0.001) == False
+  assert near_nonzero(1,0.5,0.001) == False
 
-  assert near_nonzero(1,1.00001)
-  assert near_nonzero(1.00001,1)
+  assert near_nonzero(1,1.00001,0.001)
+  assert near_nonzero(1.00001,1,0.001)
 
-  assert near_nonzero(0,0)
-  assert near_nonzero(0.00001,0)
-  assert near_nonzero(0,0.00001)
+  assert near_nonzero(0,0,0.001)
+  assert near_nonzero(0.00001,0,0.001)
+  assert near_nonzero(0,0.00001,0.001)
 
 def drop_none_values_from_dict ( d : Dict[Any,Any]
                                 ) -> Dict[Any,Any]:

@@ -1,7 +1,5 @@
 # DEFINES:
 #
-#     def near_nonzero (a : float, b : float) -> bool:
-#
 #     def negative_dSubsidy_dIncome ( bi : BasicIncome ) -> float:
 #
 #     def subsidy ( income : float ) -> float:
@@ -137,11 +135,13 @@ def test_subsidy_if_qualified ():
     homeowners_implicit_income_counts = None ) # irrelevant
 
   assert near_nonzero ( subsidy_if_qualified (bi, 0),
-                        bi . subsidy_if_broke * min_wage_2022 )
+                        bi . subsidy_if_broke * min_wage_2022,
+                        0.001)
   assert near_nonzero (
     subsidy_if_qualified( bi,
                           bi.when_subsidy_starts_to_wane * min_wage_2022 ),
-    bi . subsidy_if_broke * min_wage_2022 )
+    bi . subsidy_if_broke * min_wage_2022,
+    0.001 )
 
   # Halfway from when_subsidy_starts_to_wane to when_subsidy_disappears,
   # the subsidy should be at half what it is for someone who's broke.
@@ -150,21 +150,22 @@ def test_subsidy_if_qualified ():
       bi,
       0.5 * ( bi.when_subsidy_starts_to_wane * min_wage_2022
               + bi.when_subsidy_disappears * min_wage_2022 ) ),
-    bi.subsidy_if_broke * min_wage_2022 / 2 )
+    bi.subsidy_if_broke * min_wage_2022 / 2,
+    0.001 )
 
   # At when_subsidy_disappears at thereafter, the subsidy is 0.
   assert near_nonzero (
     subsidy_if_qualified( bi,
                           bi.when_subsidy_disappears * min_wage_2022),
-    0 )
+    0, 0.001 )
   assert near_nonzero (
     subsidy_if_qualified( bi,
                           bi.when_subsidy_disappears * min_wage_2022 * 2),
-    0 )
+    0, 0.001 )
   assert near_nonzero (
     subsidy_if_qualified( bi,
                           bi.when_subsidy_disappears * min_wage_2022 * 3),
-    0 )
+    0, 0.001 )
 
 def subsidy ( bi : BasicIncome,
               row : pd.Series,
