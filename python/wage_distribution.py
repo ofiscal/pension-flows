@@ -20,7 +20,7 @@ min_wage_buckets = [
   ( 3, 9e300 ) ] # 9e300 min wages is effectively infinity
 
 def rangeString ( iInf : float, iMax : float ) -> str:
-  return "in [" + str(iInf) + "," + str(iMax) + ") sm"
+  return "in (" + str(iInf) + "," + str(iMax) + "] sm"
 
 # Defines a boolean series.
 def labor_income_is_in_range ( a : float, b : float ) -> pd.Series:
@@ -76,7 +76,7 @@ assert ( df["earnings sum near labor income"]
            df["one"] . astype(bool) ) )
 
 if False: # optional: clean up temporary variables
-  del(df_nonzer)
+  del(df_nonzero)
   df = df.drop( columns = { "one",
                             "earnings sum",
                             "earnings sum near labor income", } )
