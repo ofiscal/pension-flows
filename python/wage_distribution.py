@@ -73,3 +73,52 @@ df["earnings sum near labor income"] = df.apply (
 assert ( df["earnings sum near labor income"]
          . equals(
            df["one"] . astype(bool) ) )
+
+if False: # optional: clean up temporary variables
+  df = df.drop( columns = { "one",
+                            "earnings sum",
+                            "earnings sum near labor income", } )
+
+
+###################################################################
+#### New dataset: Limit to formal workers, and weight each row ####
+###################################################################
+
+formal = df[ df["formal"] > 0 ]
+formal = formal.rename( columns = {"one" : "people"} )
+
+for c in [ "people",
+           "earns in [0,1) sm",
+           "earns in [1,1.5) sm",
+           "earns in [1.5,3) sm",
+           "earns in [3,9e+300) sm",
+           "labor income",
+           "earnings in [0,1) sm",
+           "earnings in [1,1.5) sm",
+           "earnings in [1.5,3) sm",
+           "earnings in [3,9e+300) sm",]:
+  formal[c] = formal[c] * formal["weight"]
+
+
+#################
+#### Results ####
+#################
+
+print ( "People (millions):" )
+print ( formal [[ "people",
+                  "earns in [0,1) sm",
+                  "earns in [1,1.5) sm",
+                  "earns in [1.5,3) sm",
+                  "earns in [3,9e+300) sm", ]]
+        . sum()
+        / (1e6 * 10) ) # These observations are person-months, so this division results in a number of millions of people. (Divide by 10, not 12, because we only have 10 months -- Jan and Feb were omitted because Jan is ugly and Feb seems like an outlier, the pandemic was ending and wages were very different.)
+
+print ( "" )
+print ( "Money (billones per year)" )
+print ( formal [[ "labor income",
+                "earnings in [0,1) sm",
+                 "earnings in [1,1.5) sm",
+                 "earnings in [1.5,3) sm",
+                 "earnings in [3,9e+300) sm", ]]
+       . sum()
+       / 1e12 )
