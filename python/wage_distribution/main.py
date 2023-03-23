@@ -106,7 +106,7 @@ def pension_public_now ( income : float ) -> float:
   return max ( min_wage_2022,
                0.65 * income )
 
-# Manual test (it worked).
+# For manual testing below.
 testDf = pd.DataFrame ( {"labor income" :
                          [ n/2 * min_wage_2022
                            for n in range (0,21) ] } )
@@ -115,8 +115,8 @@ for (name,func) in [ ("pension, public now", pension_public_now),
                      ("pension, private now", pension_private_now),
                      ("pension, pilares", pension_pilares) ]:
   formal[name] = formal["labor income"].apply(func)
-  # Manual test: compare to the Excel table "Grafico Pension.xlsx"
   testDf[name] = testDf["labor income"].apply(func)
+    # Manual test: compare testDf to `./pension-examples.xlsx`
 
 formal["subsidy decrease over public pensions"] = (
   formal["pension, public now"] -
