@@ -13,7 +13,7 @@ df = n2.read_marchThroughDec()
 #####################################
 
 min_wage_buckets = [
-  # Each of these is a (infimum, max) pair.
+  # Each of these is an (infimum, max) pair.
   ( 0, 1 ), # Income is never negative, so this includes people with 0 income. (If I put 0 instead of -1, those people would be excluded, because these are treated as half-open "(]" intervals, i.e. not including the infimum -- see the definition of `labor_income_is_in_range` below.)
   ( 1, 1.5 ),
   ( 1.5, 3 ),
@@ -165,7 +165,8 @@ print ( formal [[ "people",
                   "earns in [1.5,3) sm",
                   "earns in [3,9e+300) sm", ]]
         . sum()
-        / (1e6 * 10) ) # These observations are person-months, so this division results in a number of millions of people. (Divide by 10, not 12, because we only have 10 months -- Jan and Feb were omitted because Jan is ugly and Feb seems like an outlier, the pandemic was ending and wages were very different.)
+        / ( 1e6 * # Divide by this to put results in millions.
+            10) ) # Divide by this to put results in persons, not person-months. (We only have 10 months; January was weirdly formatted and February had strange wage data, probably because it's the tail of the pandemic.)
 
 print ( "" )
 print ( "Money (billones per year)" )
@@ -175,7 +176,7 @@ print ( formal [[ "labor income",
                   "earnings in [1.5,3) sm",
                   "earnings in [3,9e+300) sm", ]]
        . sum()
-       / 1e12 )
+       / 1e12 ) # Divide by this to put results in billones.
 
 for (who,col) in [
     ("earns in [1.5,3) sm",   "subsidy increase over private pensions"),
@@ -186,4 +187,4 @@ for (who,col) in [
           [ formal [ who ] > 0 ]
           [col]
           . sum()
-          / 1e12 )
+          / 1e12 ) # Divide by this to put results in billones.
