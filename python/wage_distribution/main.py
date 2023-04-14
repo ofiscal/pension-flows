@@ -1,3 +1,8 @@
+# TODO : Scale the "annual" sums of earnings by 12/10,
+# since January and February are omitted.
+# (They are omitted on purpose,
+# because they were strange in 2022.)
+
 import pandas as pd
 
 import python.build.nov2022_ish as n2
