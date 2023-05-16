@@ -1,10 +1,14 @@
-# PURPOSE:
-# Angie needs to know, for N in [1,2,3,infinity] (4 values),
+# PURPOSE: Answer this question:
+# For N in [1,2,3,infinity] (4 values),
 # how many people earn up to N minimum wages,
-# and what their total earnings are.
+# and what are their total earnings?
+#
+# TODO: This program suffers the same interpretion questions
+# (are the sums monthly or yearly totals?)
+# as the more complicated ./main.py.
 
 import pandas as pd
-
+#
 import python.build.nov2022_ish as n2
 from python.common import min_wage_2022
 from python.lib import near_nonzero

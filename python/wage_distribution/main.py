@@ -1,10 +1,8 @@
-# TODO : Scale the "annual" sums of earnings by 12/10,
-# since January and February are omitted.
-# (They are omitted on purpose,
-# because they were strange in 2022.)
+# PITFALL: There are a couple of important TODO comments below,
+# regarding the interpretation (monthly vs. yearly) of income sums.
 
 import pandas as pd
-
+#
 import python.build.nov2022_ish as n2
 from python.common import min_wage_2022
 from python.lib import near_nonzero
@@ -20,18 +18,19 @@ df = n2.read_marchThroughDec()
 min_wage_buckets = [
   # Each of these is an (infimum, max) pair.
   ( 0, 1 ), # Income is never negative, so this includes people with 0 income. (If I put 0 instead of -1, those people would be excluded, because these are treated as half-open "(]" intervals, i.e. not including the infimum -- see the definition of `labor_income_is_in_range` below.)
-  ( 1, 1.5 ),
-  ( 1.5, 3 ),
+  ( 1, 2 ),
+  ( 2, 3 ),
   ( 3, 9e300 ) ] # 9e300 min wages is effectively infinity
 
 def rangeString ( iInf : float, iMax : float ) -> str:
-  return "in (" + str(iInf) + "," + str(iMax) + "] sm"
+  return "in [" + str(iInf) + "," + str(iMax) + ") sm"
 
 # Defines a boolean series.
 def labor_income_is_in_range ( a : float, b : float ) -> pd.Series:
   return ( ( df["labor income"] > a ) &
            ( df["labor income"] <= b ) )
 
+# Defines a float series.
 def labor_income_in_range ( a : float, b : float ) -> pd.Series:
   return ( df["labor income"]
            . apply ( lambda i:
@@ -143,13 +142,13 @@ formal["subsidy increase over private pensions"] = (
 
 for c in [ "people",
            "earns in [0,1) sm",
-           "earns in [1,1.5) sm",
-           "earns in [1.5,3) sm",
+           "earns in [1,2) sm",
+           "earns in [2,3) sm",
            "earns in [3,9e+300) sm",
            "labor income",
            "earnings in [0,1) sm",
-           "earnings in [1,1.5) sm",
-           "earnings in [1.5,3) sm",
+           "earnings in [1,2) sm",
+           "earnings in [2,3) sm",
            "earnings in [3,9e+300) sm",
            "pension, pilares",
            "pension, private now",
@@ -166,25 +165,31 @@ for c in [ "people",
 print ( "People (millions):" )
 print ( formal [[ "people",
                   "earns in [0,1) sm",
-                  "earns in [1,1.5) sm",
-                  "earns in [1.5,3) sm",
+                  "earns in [1,2) sm",
+                  "earns in [2,3) sm",
                   "earns in [3,9e+300) sm", ]]
         . sum()
         / ( 1e6 * # Divide by this to put results in millions.
             10) ) # Divide by this to put results in persons, not person-months. (We only have 10 months; January was weirdly formatted and February had strange wage data, probably because it's the tail of the pandemic.)
 
 print ( "" )
-print ( "Money (billones per year)" )
+print ( "Money (billones per year)" ) # TODO : Reading the code above, it seems like these figures should be monthly, not yearly. But the numbers look yearly, not monthly.
+#
+# TODO : Scale the "annual" sums of earnings by 12/10,
+# since January and February are omitted.
+# (They are omitted on purpose,
+# because they were strange in 2022.)
+
 print ( formal [[ "labor income",
                   "earnings in [0,1) sm",
-                  "earnings in [1,1.5) sm",
-                  "earnings in [1.5,3) sm",
+                  "earnings in [1,2) sm",
+                  "earnings in [2,3) sm",
                   "earnings in [3,9e+300) sm", ]]
        . sum()
        / 1e12 ) # Divide by this to put results in billones.
 
 for (who,col) in [
-    ("earns in [1.5,3) sm",   "subsidy increase over private pensions"),
+    ("earns in [2,3) sm",   "subsidy increase over private pensions"),
     ("earns in [3,9e+300) sm","subsidy decrease over public pensions"), ]:
   print("")
   print( col + " for people in " + who )
