@@ -140,7 +140,7 @@ formal["subsidy increase over private pensions"] = (
 ## TODO : There's probably a nicer way to do this,
 ## with a "weight" argument to the sum() function.
 
-for c in [ "people",
+for c in [ "people", # PITFALL: Really this is person-months at this point.
            "earns in [0,1) sm",
            "earns in [1,2) sm",
            "earns in [2,3) sm",
@@ -185,8 +185,9 @@ print ( formal [[ "labor income",
                   "earnings in [1,2) sm",
                   "earnings in [2,3) sm",
                   "earnings in [3,9e+300) sm", ]]
-       . sum()
-       / 1e12 ) # Divide by this to put results in billones.
+        . sum()
+        * (12/10) # Expand these 10 months to be what a year would be.
+        / 1e12 ) # Divide by this to put results in billones.
 
 for (who,col) in [
     ("earns in [2,3) sm",   "subsidy increase over private pensions"),
@@ -197,4 +198,5 @@ for (who,col) in [
           [ formal [ who ] > 0 ]
           [col]
           . sum()
+          * (12/10) # Expand these 10 months to be what a year would be.
           / 1e12 ) # Divide by this to put results in billones.
